@@ -1,0 +1,365 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.bgcolor{
+    background-color: #061921;
+    margin-top: 10px;
+}
+.topMenu{
+    display: flex;
+    margin-top: 10px;
+    height: 70px;
+    /* border: 2px solid red; */
+}
+.nav{
+    display: flex;
+    /* align-items: center; */
+   
+}
+
+
+.logo img{
+    width: 250px;
+    height: 200px;
+    /* border: 2px solid red; */
+}
+
+.nav .searchBox{
+    border: 2px solid grey;
+    border-radius: 10px;
+}
+
+.nav .icon{
+    margin-left: 400px;
+    margin-top: 10px;
+}
+
+
+
+.profile img{
+    position: relative; left: 50px; top: 10px;
+    border: 2px solid white;
+    border-radius: 70px;
+    height: 50px;
+    width: 50px;
+}
+.sideTab{
+    display: flex;
+}
+.sideTab ul li{
+    list-style-type: none;
+    color: white;
+
+}
+.main{
+    color:white;
+   
+}
+
+.main .pic{
+    /* display: flex; */
+    float:left;
+}
+
+.main .pic h1{
+   
+    margin: 20px 10px 0px 10px;
+float: left;
+
+}
+.main .pic p{
+    margin:80px 10px 0px auto;
+   
+}
+.pic img{
+
+    position: relative;
+    border: 2px solid white;
+    border-radius: 120px;
+    height: 100px;
+    width: 100px;
+    float: left;
+    margin: 10px 0px 0px 0px;
+  }
+
+
+.main .form input{
+    border: 1px solid aqua;
+}
+
+.main .form input,label{
+    color:white;
+}
+
+.logo1 img{
+width: 200px;
+height: 200px;
+/* position: relative; */
+/* margin: 100px 100px 100px 500px; */
+}
+.bt{
+    width: 200px;
+    background-color: blue;
+    border: 2px solid blue;
+    border-radius: 10px;
+    color: white;
+    margin: 20px 100px 10px 120px;
+
+}
+
+.form-group {
+  margin-bottom: 5px !important;
+}
+
+
+
+.container .clas{
+    margin-top: 100px;
+    margin-left: 100px;
+}
+.clas input{
+    margin: 0px 200px 50px 130px;
+    border-radius: 10px;
+    /* margin-top: 10px */
+
+}
+
+.sideTab ul{
+    margin-top: 150px;
+    display: flex;
+    flex-direction: column;
+}
+.mid{
+   margin: 180px 0px 0px 80px;
+}
+.mid .btn1{
+    width: 200px !important;
+     margin: 100px 1px 50px 0px
+}
+
+.mid .btn2{
+   
+   width: 200px !important;
+    margin: 50px 100px 0px 150px
+}
+
+.mid .row input{
+    border: 2px solid rgb(78, 40, 231);
+    background-color: #061921;
+
+}
+.mid .row input::placeholder {
+    color: white;
+    opacity: 1; }
+
+    .card{
+        max-width: 18vmax;
+        border-radius: 100px;
+        background-color: gainsboro;
+    }
+
+
+    .dropzone{
+        display: block;
+        width: 20px;
+        background: #071716;
+        color: #fff;
+        padding: 12px;
+        cursor: pointer;
+        border-radius: 100px;
+
+    }
+ .ex{
+    display: block;
+    position: relative;
+    cursor: pointer;
+    background-color:blue;
+    width: 20em;
+    padding: 1em 0;
+    border-radius: 0.3em;
+    margin: 0 auto 1em auto;
+ }
+   .coli #upload-button, .example{
+        display: none;
+    }
+  .ex i{
+    width: 100px;
+ }
+
+ 
+
+      .imageBox{
+        max-width: 10vmax;
+        border: 2px solid red;
+
+      }
+      .coli{
+        background-color:#019191;
+        max-width: 560px;
+        height: 250px;
+        padding: 3.12em 1.87em;
+        margin-left: 120px !important; 
+        /* top: 1em; */
+        margin-bottom: 20px;
+        border: 0.2em dashed white;
+        color: white;
+      }
+      #error{
+        text-align: center;
+        color: red;
+      }
+      #image-display{
+        margin: 0 auto;
+        width: 90%;
+        position: relative;
+        display: flex;
+        justify-content: space-evenly;
+        gap: 1.25em;
+        flex-wrap: wrap;
+      }
+
+      #image-display figure{
+        width: 45%;
+      }
+
+      #image-display img{
+        width: 100%;
+      }
+
+      #image-display figcaption{
+        font-size: 0.8em;
+        text-align: center;
+        color: brown;
+      }
+
+      #submit{
+        margin-left: 120px;
+      }
+      #inputState3{
+        margin: 0px 200px 50px 130px;
+      }
+.supportBox {
+    margin-top: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+      .box{
+        width: 200px; 
+        height: 200px; 
+        background-color: #019191; 
+        border-radius: 10px;
+        color: aliceblue; 
+        display: block;
+        float: left;
+        margin-left: 50px;
+        text-align: center;
+      }
+.box2{
+  margin: 10px;
+}
+      .calculator{
+        margin-left: 300px !important;
+        margin-top: 80px;
+        margin-bottom: 50px ;
+      }
+
+      .table .clickable-row td{ 
+        border-radius: 10px;
+
+     }
+     /* .footer {
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      background-color: #f0f0f0;
+      padding: 10px;
+    } */
+
+    /* Custom CSS for the Risk Calculator form */
+.calculator {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.calculator form {
+  margin-bottom: 0; /* Remove bottom margin for better appearance */
+}
+
+.calculator button {
+  margin-top: 20px;
+}
+
+.calculator label {
+  font-weight: bold;
+}
+
+/* Adjust the layout for smaller screens */
+@media (max-width: 768px) {
+  .calculator .form-group {
+    margin-bottom: 15px;
+  }
+}
+
+
+/* Custom CSS for the boxes in support */
+.box {
+  
+  padding: 20px;
+  border-radius: 10px;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  margin-top: 100px;
+}
+
+.box img {
+  max-width: 80px;
+  margin-bottom: 10px;
+}
+
+/* Adjust the layout for smaller screens */
+@media (max-width: 767px) {
+  .box {
+    margin-bottom: 20px;
+  }
+}
+
+
+
+/* Custom CSS for the Subscriber table */
+.table {
+  margin-bottom: 0; /* Remove bottom margin for better appearance */
+}
+
+.table th,
+.table td {
+  vertical-align: middle; /* Center the content vertically */
+}
+
+.table th {
+  background-color: #343a40; /* Header background color */
+}
+
+.table th,
+.table td {
+  border: 1px solid #dee2e6; /* Table borders */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f8f9fa; /* Alternating row background color */
+}
+
+.table-striped tbody tr:hover {
+  background-color: #e9ecef; /* Hover row background color */
+}
+
+/* Adjust the layout for smaller screens */
+@media (max-width: 767px) {
+  .table th,
+  .table td {
+    white-space: nowrap; /* Prevent text wrapping on small screens */
+  }
+}
