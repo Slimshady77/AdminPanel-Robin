@@ -95,14 +95,14 @@
                                                 <td><%= data[i].category %></td>
                                                 <td>
                                                   <video id="videoPlayer" width="100%" controls preload="auto">
-                                                    <source src="/video" type="video/mp4">
+                                                    <source src="videos/<%= data[i].video %>" type="video/mp4">
                                                   </video>
                                                 </td>
                                                 <td>
                                                   <img style="max-height: 100px; max-width: 100px;" src="photos/<%= data[i].Photo %>" alt="Thumbnail">
                                                 </td>
                                                 <td>
-                               <td> <a href="/course-edit"><i class="nav-icon ti ti-pencil-alt"> </i></a>
+                               <td> <a href="/library-edit"><i class="nav-icon ti ti-pencil-alt"> </i></a>
                                                 </td>
                                                 <td>
                                 <td><a href="/delete/<%= data[i]._id %>"><i class="nav-icon ti ti-trash"></i></i></a>

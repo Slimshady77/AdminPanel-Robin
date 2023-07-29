@@ -488,7 +488,7 @@ app.post('/course', upload1.fields([{ name: 'photo', maxCount: 1 }]), (req, res)
     // Access the file paths for further processing
     const photoPath = path.basename(files.photo[0].path);
 
-    // Assuming you have a Mongoose model called `lebrary` for saving the file paths
+    // Assuming you have a Mongoose model called `li    brary` for saving the file paths
     const courseMain = new course({
         file_name,
         price,
@@ -734,11 +734,10 @@ app.get('/course-edit', (req, res) => {
 })
 
 
-app.get('/library-edit', isAuthenticated, (req, res) => {
+app.get('/library-edit', (req, res) => {
     library.find()
         .then((data) => {
             res.render('library-edit', { data: data });
-            // res.render('course-edit')
             console.log(data);
         })
         .catch((error) => {
@@ -758,6 +757,12 @@ app.post('/edit/:id', (req, res) => {
         // duration: req.body.duration,
         Photo: req.body.Photo
     }
+    // if (req.file) {
+    //     updatedit.photo = {
+    //         data: req.file.filename,
+    //         contentType: 'image/jpg',
+    //     };
+    // }
     course.findByIdAndUpdate(req.params.id, updatedit).then(() => {
         // res.redirect('course-page');
         res.send('successfully updated!')
@@ -769,6 +774,31 @@ app.post('/edit/:id', (req, res) => {
 });
 // EDIT ENDS
 
+
+// Library Edit starts
+
+app.post('/video/:file_name', upload.fields([
+    { name: 'video', maxCount: 1 }, // 'video' field is for video file (maxCount: 1 means only one file)
+    { name: 'Photo', maxCount: 1 } // 'Photo' field is for photo file (maxCount: 1 means only one file)
+  ]), (req, res) => {
+    var updatedVideo = {
+      file_name: req.body.file_name,
+      category: req.body.category,
+      video: req.files['video'][0].filename, // Access the video file name from req.files
+      Photo: req.files['Photo'][0].filename // Access the photo file name from req.files
+    };
+  
+    // Use the 'findOneAndUpdate' method to find and update the video by its ID
+    library.findByIdAndUpdate(req.params.id, updatedVideo)
+      .then(() => {
+        res.send('Successfully updated!');
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(500).send('Error occurred while updating the video.');
+      });
+  });
+// Library Edit ends
 
 
 // Server listening
