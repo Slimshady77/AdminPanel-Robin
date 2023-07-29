@@ -645,41 +645,41 @@ app.post('/library-upload', upload.fields([{ name: 'video' }, { name: 'photo' }]
 
 
 
-app.get('/video', (req, res) => {
+// app.get('/video', (req, res) => {
 
-    const range = req.headers.range;
+//     const range = req.headers.range;
 
-    if (!range) {
-        res.status(400).send('err');
-    }
-    const videoPath = "./public/videos/video (2160p).mp4";
-    const videosize = fs.statSync(videoPath).size;
+//     if (!range) {
+//         res.status(400).send('err');
+//     }
+//     const videoPath = "./public/videos/video (2160p).mp4";
+//     const videosize = fs.statSync(videoPath).size;
 
-    const chunkSize = 10 ** 6;
-    const start = Number(range.replace(/\D/g, ""));
-    const end = Math.min(start + chunkSize, videosize - 1);
-    const contentLength = end - start + 1;
+//     const chunkSize = 10 ** 6;
+//     const start = Number(range.replace(/\D/g, ""));
+//     const end = Math.min(start + chunkSize, videosize - 1);
+//     const contentLength = end - start + 1;
 
-    const headers = {
-        "Content-Range": `bytes ${start}-${end}/${videosize}`,
-        "Accept-Ranges": 'bytes',
-        "Content-Length": contentLength,
-        "Content-Type": 'video/mp4'
-    }
-    res.writeHead(206, headers);
+//     const headers = {
+//         "Content-Range": `bytes ${start}-${end}/${videosize}`,
+//         "Accept-Ranges": 'bytes',
+//         "Content-Length": contentLength,
+//         "Content-Type": 'video/mp4'
+//     }
+//     res.writeHead(206, headers);
 
 
-    const videoStream = fs.createReadStream(videoPath, { start, end });
-    videoStream.on('open', () => {
-        videoStream.pipe(res);
-    });
+//     const videoStream = fs.createReadStream(videoPath, { start, end });
+//     videoStream.on('open', () => {
+//         videoStream.pipe(res);
+//     });
 
-    videoStream.on('error', (err) => {
-        console.error('Error reading video stream:', err);
-        res.status(500).send('Video streaming error.');
-    });
+//     videoStream.on('error', (err) => {
+//         console.error('Error reading video stream:', err);
+//         res.status(500).send('Video streaming error.');
+//     });
 
-})
+// })
 
 app.get('/Liberary', (req, res) => {
     library.find().then((data) => {
@@ -733,6 +733,19 @@ app.get('/course-edit', (req, res) => {
         })
 })
 
+app.get('/chapter-edit', (req, res) => {
+    // console.log(req.user._id);
+
+    chapter.find()
+        .then((data) => {
+            res.render('chapter-edit', { data: data });
+            // console.log(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+})
+
 
 app.get('/library-edit', (req, res) => {
     library.find()
@@ -777,19 +790,21 @@ app.post('/edit/:id', (req, res) => {
 
 // Library Edit starts
 
-app.post('/video/:file_name', upload.fields([
+app.post('/update-selected-videos', upload.fields([
     { name: 'video', maxCount: 1 }, // 'video' field is for video file (maxCount: 1 means only one file)
     { name: 'Photo', maxCount: 1 } // 'Photo' field is for photo file (maxCount: 1 means only one file)
   ]), (req, res) => {
+    const selectedVideoIds = req.body.selectedItems;
+       console.log(selectedVideoIds)
     var updatedVideo = {
       file_name: req.body.file_name,
       category: req.body.category,
       video: req.files['video'][0].filename, // Access the video file name from req.files
       Photo: req.files['Photo'][0].filename // Access the photo file name from req.files
     };
-  
+//   console.log(selectedVideoIds)
     // Use the 'findOneAndUpdate' method to find and update the video by its ID
-    library.findByIdAndUpdate(req.params.id, updatedVideo)
+    library.findByIdAndUpdate( selectedVideoIds , updatedVideo)
       .then(() => {
         res.send('Successfully updated!');
       })

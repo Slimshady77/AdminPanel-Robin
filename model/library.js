@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
 
 const url = process.env.DATABASE;
+
 mongoose.connect(url, {
     useUnifiedTopology: true, useNewUrlParser: true
 })
