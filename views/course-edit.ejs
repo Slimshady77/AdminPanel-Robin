@@ -57,49 +57,61 @@
                               
                                 <!-- begin row -->
 
-                                <form method="post" action="/edit/<%= data._id %>">
-
-                                    <div class=" form-floating mb-3">
-                                        <label for="exampleInputtext" class="form-label">File name</label>
-                                        <input type="text" class="form-control w-60" name="file_name"
-                                            value="<%= data.file_name %>" style="color: black;">
-
-                                            <label for="exampleInputtext" class="form-label">price</label>
-                                        <input type="text" class="form-control w-60" name="price" value="<%= data.price %>"
-                                            style="color: black;">
-
-
+                                <form method="post" action="/update-selected-course" enctype="multipart/form-data">
+                                    <div class="col-md-12 m-b-30">
+                                      <!-- begin page title -->
+                                      <div class="col-lg-12">
+                                        <% if (data.length > 0) { %>
+                                          <div class="table-responsive">
+                                            <table class="table table-dark">
+                                              <thead>
+                                                <tr>
+                                                  <th style="color: blue;">Select</th>
+                                                  <th style="color: blue;">Course/Program Name</th>
+                                                  <th style="color: blue;">Price</th>
+                                                  <th style="color: blue;">Photo</th>
+                                                  <th style="color: blue;">Actions</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <% for (var i = 0; i < data.length; i++) { %>
+                                                  <tr>
+                                                    <td>
+                                                      <input type="checkbox" name="selectedItems[]" value="<%= data[i]._id %>">
+                                                      
+                                                    </td>
+                                                    <td>
+                                                      <input type="text" value="<%= data[i].file_name %>" name="file_name">
+                                                    </td>
+                                                    <td>
+                                                      <input type="text" value="<%= data[i].price %>" name="price">
+                                                    </td>
+                                                    
+                                                    <td>
+                                                      <img src="course-list/<%= data[i].Photo %>" alt="" style="width: 100px; height: 100px;">
+                                                      <input type="file" name="Photo">
+                                                    </td>
+                                                 
+                                  
+                                                    <td>
+                                                      <a href="/delete/<%= data[i]._id %>"><i class="nav-icon ti ti-trash"></i></a>
+                                                    </td>
+                                                    <td>
+                                      <button type="submit" class="btn btn-primary">Update</button>
+  
+                                                    </td>
+                                                  </tr>
+                                                <% } %>
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        <% } else { %>
+                                          <p>No data available.</p>
+                                        <% } %>
+                                        <!-- end page title -->
+                                      </div>
                                     </div>
-
-                                    <!-- <div class="mb-3">
-                                        
-                                    </div> -->
-                                    <img src="course-list/<%= data.Photo %>" alt="Thumbnail" style="height: 200px; width: 200px;" >
-                                    <div class="mb-3">
-                                        <label for="exampleInputtext" class="form-label">Photo</label>
-                                        <label for="exampleInputtext" class="form-label" style="color: aliceblue;"><%= data.Photo %></label>
-
-                                        
-                                        <input  type="file" class="form-control w-60" name="Photo">
-                                    </div>
-
-                                    <!-- <div class="mb-3">
-                                        <label for="exampleInputtext" class="form-label">Photo</label>
-                                        <input type="text" class="form-control w-60" name="Photo" value="<%= data.Photo %>"
-                                            style="color: black;">
-
-                                    </div> -->
-                                    <!-- <div class="mb-3">
-                                      <label for="exampleInputEmail1" class="form-label" >Email address</label>
-                                      <input type="email" class="form-control" name="program" value=" <%= data.program %>">
-                                      
-                                    </div> -->
-
-
-                                    <button type="submit" class="btn btn-primary">Update</button>
-
-                                    <!-- end row -->
-                                </form>
+                                  </form>
 
 
 
@@ -126,7 +138,24 @@
     <script src="js/app.js"></script>
     <script src="js/javas.js"></script>
 
-
+    <script>
+        $(document).ready(function() {
+          // Listen for checkbox click event
+          $('input[type="checkbox"]').on('click', function() {
+            // Get the parent table row of the clicked checkbox
+            var parentRow = $(this).closest('tr');
+      
+            // Check if the checkbox is checked
+            if ($(this).is(':checked')) {
+              // If checked, hide all other table rows except the current one
+              parentRow.siblings().css('display','none');
+            } else {
+              // If unchecked, show all table rows
+              parentRow.siblings().show();
+            }
+          });
+        });
+      </script>
 
 
 </body>

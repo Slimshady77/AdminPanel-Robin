@@ -85,13 +85,14 @@
                                     <thead>
                                       <tr>
                                         <th style="color:white">#</th>
+                                        <th style="color:white">Status</th>
                                         <th style="color:white">Program Name</th>
                                         <th style="color:white">User Name</th>
-                                        <th style="color:white">Status</th>
-                                        <th style="color:white">Marks</th>
-                                        <th style="color:white">Chapter</th>
-                                        <th style="color:white">Lesson</th>
-                                        <th style="color:white">Duration</th>
+                                        <th style="color:white">Profession</th>
+                                        <th style="color:white">Email</th>
+                                        <th style="color:white">Mobile</th>
+                                        <th style="color:white">Location</th>
+                                        <th style="color:white">Achievment</th>
                                         <th style="color:white">Action</th>
                                       </tr>
                                     </thead>
@@ -99,15 +100,18 @@
                                       <% for(var i=0; i < data.length; i++) { %>
                                         <tr>
                                           <td><%= i+1 %></td>
-                                          <td><%= data[i].file_name %></td>
+                                          <td><%= data[i].status %></td>
+                                          <td><%= data[i].program_name %></td>
                                           <td><%= data[i].user %></td>
-                                          <td>
+                                          <!-- <td> -->
                                             <!-- <embed src="course-list/<%= data[i].program %>" width="150px" height="160px" /> -->
-                                          </td>
-                                          <td><%= data[i].duration %></td>
-                                          <td><%= data[i].chapter %></td>
-                                          <td><%= data[i].lesson %></td>
-                                          <td><%= data[i].duration %></td>
+                                          <!-- </td> -->
+                                          <td><%= data[i].profession %></td>
+                                          <td><%= data[i].email %></td>
+                                          <td><%= data[i].mob %></td>
+                                          <td><%= data[i].location %></td>
+                                          <td><%= data[i].acheivement %></td>
+
                                           <td>
                                 <a href="/course-edit"><i class="nav-icon ti ti-pencil-alt"> </i></a>
 

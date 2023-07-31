@@ -10,15 +10,10 @@ mongoose.connect(url, {
     .catch((err) => console.log(err));
 
 const courseSchema = mongoose.Schema({
-    chapter_name: {
-        type: String,
-        // required:true
-    },
-    program:{
-        type: String
-    },
-    Photo: String,
-    video:String
+    chapter_name: [String],
+    program: [String],
+    Photo: [String],
+    video:[String]
 })
 
 const chapter = mongoose.model('TOROFX_Chapter', courseSchema);

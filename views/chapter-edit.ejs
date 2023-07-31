@@ -63,7 +63,7 @@
 
               <form
                 method="post"
-                action="/video/<%= data._id %>"
+                action="/update-selected-chapters"
                 enctype="multipart/form-data"
               >
                 <div class="col-md-12 m-b-30">
@@ -95,16 +95,16 @@
                             <td>
                               <input
                                 type="text"
-                                value="<%= data[i].chapter_name %>"
                                 name="chapter_name"
+                                value="<%= data[i].chapter_name %>"
                                 style="color: black"
                               />
                             </td>
                             <td>
                               <input
                                 type="text"
-                                value="<%= data[i].program %>"
                                 name="program"
+                                value="<%= data[i].program %>"
                               />
                             </td>
                             <td>
@@ -174,5 +174,23 @@
     <!-- custom app -->
     <script src="js/app.js"></script>
     <script src="js/javas.js"></script>
+    <script>
+      $(document).ready(function() {
+        // Listen for checkbox click event
+        $('input[type="checkbox"]').on('click', function() {
+          // Get the parent table row of the clicked checkbox
+          var parentRow = $(this).closest('tr');
+    
+          // Check if the checkbox is checked
+          if ($(this).is(':checked')) {
+            // If checked, hide all other table rows except the current one
+            parentRow.siblings().css('display','none');
+          } else {
+            // If unchecked, show all table rows
+            parentRow.siblings().show();
+          }
+        });
+      });
+    </script>
   </body>
 </html>

@@ -12,14 +12,14 @@ mongoose.connect(url, {
 
 const courseSchema = mongoose.Schema({
     file_name: {
-        type: String,
+        type: [String] ,
         // required:true
     },
     category:{
-        type: String
+        type: [String]
     },
-    Photo: String,
-    video:String
+    Photo: [String],
+    video:[String]
 })
 
 const library = mongoose.model('TOROFX_library', courseSchema);

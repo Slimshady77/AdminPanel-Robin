@@ -11,12 +11,12 @@ mongoose.connect(url, {
 
 const courseSchema = mongoose.Schema({
     file_name: {
-        type: String,
+        type: [String],
         // required:true
     },
-    price: Number,
-    duration:Number,
-    Photo: String,
+    price: [Number],
+    // duration:Number,
+    Photo: [String],
 })
 
 const course = mongoose.model('TOROFX_course', courseSchema);
