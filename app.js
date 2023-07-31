@@ -791,8 +791,8 @@ app.post('/edit/:id', (req, res) => {
 // Library Edit starts
 
 app.post('/update-selected-videos', upload.fields([
-    { name: 'video', maxCount: 1 }, // 'video' field is for video file (maxCount: 1 means only one file)
-    { name: 'Photo', maxCount: 1 } // 'Photo' field is for photo file (maxCount: 1 means only one file)
+    { name: 'video', maxCount: 2 }, // 'video' field is for video file (maxCount: 1 means only one file)
+    { name: 'Photo', maxCount: 2 } // 'Photo' field is for photo file (maxCount: 1 means only one file)
   ]), (req, res) => {
     const selectedVideoIds = req.body.selectedItems;
        console.log(selectedVideoIds)
