@@ -56,47 +56,46 @@
               <div class="container-fluid">
                 <!-- begin row -->
                 <div class="row">
-                  <div class="col-md-6 m-b-30 supportBox">
-                    <!-- begin page title -->
-                    <label for="question">Question:- </label>
-                    <textarea id="#" name="question" rows="4" class="form-control" placeholder="Enter your question" required>
-              At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.
-                    </textarea>
-                  </div>
+                  
                   <div class="col-md-6">
-                    <div class="form-group">
-                      <input type="radio" id="option1" name="answer" value="option1" required>
-                      <label for="option1">Option 1</label>
-                      <input type="text" class="form-control" placeholder="Enter option 1" required>
-                    </div>
-              
-                    <div class="form-group">
-                      <input type="radio" id="option2" name="answer" value="option2" required>
-                      <label for="option2">Option 2</label>
-                      <input type="text" class="form-control" placeholder="Enter option 2" required>
-                    </div>
-              
-                    <div class="form-group">
-                      <input type="radio" id="option3" name="answer" value="option3" required>
-                      <label for="option3">Option 3</label>
-                      <input type="text" class="form-control" placeholder="Enter option 3" required>
-                    </div>
-              
-                    <div class="form-group">
-                      <input type="radio" id="option4" name="answer" value="option4" required>
-                      <label for="option4">Option 4</label>
-                      <input type="text" class="form-control" placeholder="Enter option 4" required>
-                    </div>
-              
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <form action="/submit-quiz" method="post">
+                      <div class="form-group">
+                        <label for="question">Question:</label>
+                        <input id="question" name="question" class="form-control" placeholder="Enter your question" required>
+                      </div>
+                      <div class="form-group">
+                        <input type="radio" id="option1" name="answer" value="option1" required>
+                        <label for="option1">Option 1</label>
+                        <input type="text" class="form-control" name="option1" placeholder="Enter option 1" required>
+                      </div>
+                      <div class="form-group">
+                        <input type="radio" id="option2" name="answer" value="option2" required>
+                        <label for="option2">Option 2</label>
+                        <input type="text" class="form-control" name="option2" placeholder="Enter option 2" required>
+                      </div>
+                      <div class="form-group">
+                        <input type="radio" id="option3" name="answer" value="option3" required>
+                        <label for="option3">Option 3</label>
+                        <input type="text" class="form-control" name="option3" placeholder="Enter option 3" required>
+                      </div>
+                      <div class="form-group">
+                        <input type="radio" id="option4" name="answer" value="option4" required>
+                        <label for="option4">Option 4</label>
+                        <input type="text" class="form-control" name="option4" placeholder="Enter option 4" required>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
                   </div>
+                  
                   <!-- end page title -->
                 </div>
                 <!-- end row -->
               </div>
-              
+            
               <!-- end container-fluid -->
             </div>
+            
+            
             <!-- end app-main -->
         </div>
         <!-- end app-container -->

@@ -115,7 +115,7 @@ height: 200px;
     margin-top: 100px;
 }
 .clas input{
-    margin: 0px 200px 50px 130px;
+    margin: 0px 150px 50px 100px;
     border-radius: 10px;
     margin-top: 10px
 
@@ -227,3 +227,36 @@ height: 200px;
         text-align: center;
         color: brown;
       }
+
+
+/* 
+
+
+      .landing-page-wrapper .navbar .navbar-menu .navbar-item .theme-toggle input:checked~.toggler {
+        border-color: #797bf2;
+    }
+
+    
+
+
+    .switch-wrapper .night-toggle .toggler {
+    position: relative;
+    display: block;
+    height: 31px;
+    width: 53px;
+    border: 2px solid #671cc9;
+    border-radius: 100px;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+}
+span {
+    font-style: inherit;
+    font-weight: inherit;
+}
+ .navbar .navbar-menu .navbar-item.is-theme-toggle {
+    opacity: 1;
+    pointer-events: all;
+}
+
+
+       */

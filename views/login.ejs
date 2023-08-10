@@ -1,93 +1,127 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <!-- Required meta tags  -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apps Imagica</title>
-    <link href="css/dash.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-</head>
+        <title> TORO FX :: Login</title>
+        <link rel="icon" type="image/png" href="assets/img/favicon.png" />
 
-<body class="bgcolor">
-    <div class="container">
-        <div class="row">
-            <div class="col topMenu">
+        <!--Core CSS -->
+        <link rel="stylesheet" href="css/app.css">
+        <link rel="stylesheet" href="css/main.css">
 
-                <div class="col logo">
-                    <a href="#"> <img src="img/torofx.jpg" alt="logo" srcset=""></a>
-                </div>
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
 
-                <div class="col nav">
+    </head>
+    <body>
+        <div id="huro-app" class="app-wrapper">
 
-                    <i class="fa-regular fa-bell fa-xl icon" style="color: #ffffff; "></i>
-
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="sideTab">
-                    <ul>
-                        <a class="btn" href="signup">
-                            <li><i class="fa-solid fa-sign-in "></i> sign up</li>
-                        </a>
-
-
-                        <a class="btn" href="#">
-                            <li><i class="fa-solid fa-circle-question"></i>Support</li>
-                        </a>
-
-                    </ul>
-                </div>
-            </div>
-
-
-            <div class="col-md-6 ">
-                <div class="container clas">
-                    <form method="post" action="/login">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Email address</label>
-                            <input type="text" class="form-control" name="username" aria-describedby="emailHelp"
-                                placeholder="Enter email id">
-
+            <!-- Pageloader -->
+            <div class="pageloader is-full"></div>
+            <div class="infraloader is-full is-active"></div>
+            <div class="auth-wrapper">
+                
+                <div class="auth-wrapper-inner is-single">
+                
+                    <!--Fake navigation-->
+                    <div class="auth-nav">
+                        <div class="left"></div>
+                        <div class="center">
+                            <a href="/" class="header-item">
+                                <img class="light-image" src="img/torofx.png" alt="" style="width: 200px !important; height: 100px;">
+                                <img class="dark-image" src="img/torofx.png" alt="" style="width: 200px !important; height: 100px;">
+                            </a>
                         </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Password</label>
-                            <input type="password" class="form-control" name="password" placeholder="Password">
+                        <div class="right">
+                            <label class="dark-mode ml-auto">
+                                <input type="checkbox" checked>
+                                <span></span>
+                            </label>
                         </div>
-
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-
-
-
-
+                    </div>
+                
+                    <!--Single Centered Form-->
+                    <div class="single-form-wrap">
+                
+                        <div class="inner-wrap">
+                            <!--Form Title-->
+                            <div class="auth-head">
+                                <h2>Welcome Back.</h2>
+                                <p>Please sign in to your account</p>
+                                <a href="/auth-register">I do not have an account yet </a>
+                            </div>
+                
+                            <!--Form-->
+                            <div class="form-card">
+                
+                                <form method="post" action="/login">
+                                    <div id="signin-form" class="login-form">
+                                        <!-- Input -->
+                                        <div class="field">
+                                            <div class="control has-icon">
+                                                <input class="input" type="text" placeholder="Username" name="username">
+                                                <span class="form-icon">
+                                                    <i data-feather="user"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!-- Input -->
+                                        <div class="field">
+                                            <div class="control has-icon">
+                                                <input class="input" type="password" placeholder="Password" name="password">
+                                                <span class="form-icon">
+                                                    <i data-feather="lock"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                
+                                        <div class="setting-item">
+                                            <label class="form-switch is-primary">
+                                                <input type="checkbox" class="is-switch" id="busy-mode-toggle">
+                                                <i></i>
+                                            </label>
+                                            <div class="setting-meta">
+                                                <span>Remember Me</span>
+                                            </div>
+                                        </div>
+                
+                                        <!-- Submit -->
+                                        <div class="control login">
+                                            <button class="button h-button is-primary is-bold is-fullwidth is-raised">Sign In</button>
+                                        </div>
+                
+                                        
+                                    </div>
+                                </form>
+                            </div>
+                
+                            <div class="forgot-link has-text-centered">
+                                <a href="/Login-by-email">Login via Email</a>
+                            </div>
+                            <div class="forgot-link has-text-centered">
+                                <a href="/google">Login via Google</a>
+                            </div>
+                
+                        </div>
+                
+                    </div>
+                
                 </div>
-
-
             </div>
 
-
-
+            <!-- Concatenated plugins -->
+            <script src="js/app2.js"></script>
+            
+            <!-- Huro js -->
+            <script src="js/functions.js"></script>
+            <script src="js/auth.js"></script>
         </div>
-    </div>
-    <script src="https://kit.fontawesome.com/4bfdec9b2c.js" crossorigin="anonymous"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script> -->
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="js/resp.js"></script>
-    <script type="text/javascript" src="js/lightslider.js" defer></script>
-    <script src="js/my-function.js"></script>
-    <script src="js/jquery-touch.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
+    </body>
 </html>

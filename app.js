@@ -4,10 +4,16 @@ var http = require("http").Server(app);
 const dotenv = require("dotenv");
 const multer = require("multer");
 const axios = require("axios");
-const fs = require("fs");
-
+const bcrypyt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+// const fs = require("fs");
+// const sgMail = require("@sendgrid/mail");
+const Nodemailer = require("nodemailer");
+const API_KEY =
+  "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";
 const { v4: uuidV4 } = require("uuid");
 const passport = require("passport");
+
 const BodyParser = require("body-parser");
 const expressSession = require("express-session");
 // const fileStore = require("session-file-store")(expressSession)
@@ -15,9 +21,10 @@ const expressSession = require("express-session");
 app.use(BodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static(__dirname + "/public"));
-
 const path = require("path");
 dotenv.config({ path: "./config.env" });
+require("./passport-setup");
+
 // const userModel1 = require('./model/library.js');
 
 const { model } = require("mongoose");
@@ -25,7 +32,9 @@ const library = require("./model/library");
 const course = require("./model/course");
 const userModel = require("./model/model");
 const chapter = require("./model/chapter");
-
+const userModel1 = require("./model/user");
+const questionModel = require("./model/question");
+const categoryModel = require("./model/category");
 const PORT = process.env.PORT;
 const secret = process.env.SECRET;
 app.use(
@@ -44,6 +53,15 @@ app.use(passport.session());
 const { initializingPassport } = require("./passportConfig");
 initializingPassport(passport);
 
+// var authJWT = (req, res, next) => {
+//   var token = req.headers.authorization;
+//   token = token.split(" ")[1];
+//   jwt.verify(token, process.env.SECRET, function (err, decoded) {
+//     if (err) {
+//       res.send({ message: "Invalid Token" });
+//     } else next();
+//   });
+// };
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -96,11 +114,15 @@ function isAuthenticated(req, res, done) {
 // }
 
 // Routes
-
+app.get('/category-upload', (req,res)=>{
+  res.render('category-upload')
+})
 app.get("/index", (req, res) => {
   res.render("index");
 });
-
+app.get('/setting', (req,res)=>{
+  res.render("setting");
+})
 app.get("/index-crypto-currency", (req, res) => {
   res.render("index-crypto-currency");
 });
@@ -189,8 +211,11 @@ app.get("/course-upload", (req, res) => {
 app.get("/login", (req, res) => {
   res.render("login");
 });
+app.get("/login-by-email", (req, res) => {
+  res.render("login-by-email");
+});
 app.get("/subscribers", (req, res) => {
-  userModel.find().then((data) => {
+  userModel1.find().then((data) => {
     res.render("subscribers", { data: data });
   });
 });
@@ -216,6 +241,27 @@ app.get("/chapter-assignment", (req, res) => {
   res.render("chapter-assignment");
 });
 
+app.get("/user-profile", (req, res) => {
+  userModel1
+    .find({_id:'64cba44a4619d1355a3de2bb'
+    })
+    .then((data) => {
+      res.render("user-profile", { data: data }); // Include the data in the render call
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("An error occurred");
+    });
+});
+
+
+app.get("/Charts", (req, res) => {
+  res.render("Charts");
+});
+app.get("/static-charts", (req, res) => {
+  res.render("static-charts");
+});
+
 app.get("/course-chapter", (req, res) => {
   chapter.find().then((data) => {
     res.render("course-chapter", { data: data });
@@ -237,7 +283,11 @@ app.get("/course-chapter-upload", (req, res) => {
 // register
 
 app.post("/auth-register", async (req, res) => {
-  const { fname, lname, email, username, password } = req.body;
+  const { fname, lname, email, username } = req.body;
+  var salt = bcrypyt.genSaltSync(10);
+  // console.log(salt);
+  var password = bcrypyt.hashSync(req.body.password, salt);
+
   const user = await userModel.findOne({ email: email });
   if (user) {
     return res.status(400).send("user already exists!");
@@ -260,6 +310,43 @@ app.post("/auth-register", async (req, res) => {
       res.status(400).json({ err: "internal err" });
       console.log(err);
     });
+});
+
+app.post("/user-profile", async (req, res) => {
+
+  const { username, email, mob, status, acheivement, location, pro, program } =
+    req.body;
+
+  console.log("Received data from the form:", req.body);
+
+  try {
+    const user = await userModel1.findOne({ email: email });
+    console.log("User found in the database:", user);
+
+    if (user) {
+      console.log("User already exists!");
+      return res.status(400).send("User already exists!");
+    }
+
+    const register1 = new userModel1({
+      status,
+      pro,
+      program,
+      email,
+      username,
+      location,
+      mob,
+      acheivement,
+    });
+
+    await register1.save();
+
+    console.log("User registered successfully!");
+    return res.status(200).json({ message: "Registration successful" });
+  } catch (err) {
+    console.error("Error occurred while processing registration:", err);
+    return res.status(500).json({ err: "Internal server error" });
+  }
 });
 
 app.get("/page-account-settings", isAuthenticated, (req, res) => {
@@ -308,6 +395,135 @@ app.post(
   }
 );
 
+// app.post(
+//   "/login",
+//   passport.authenticate("local", { session: false }), // Disable session-based authentication for JWT
+//   (req, res) => {
+//     // Generate JWT token for the authenticated user
+//     const payload = { id: req.user.id, username: req.user.username };
+//     const token = jwt.sign(payload, process.env.SECRET, { expiresIn: "300s" });
+
+//     // Return the token as a response
+//     console.log("Token generated successfully");
+//     res.status(200).json({ token: token });
+//   }
+// );
+
+// Login by email Nodemailer starts
+
+// sgMail.setApiKey(API_KEY);
+
+// app.post("/Login-by-email", async (req, res) => {
+//   try {
+//     const userEmail = req.body.email;
+//     const userData = await userModel.findOne({ email: userEmail }).exec();
+
+//     if (userData) {
+//       const token =
+//         Math.random().toString(36).substring(2, 15) +
+//         Math.random().toString(36).substring(2, 15);
+//       const newEmail = await userModel.updateOne(
+//         { email: userEmail },
+//         { $set: { token: token } }
+//       );
+//       // res.status(200).send({ success: true, msg: " try Login by link" });
+
+//       const mailOptions = {
+//         to: userEmail,
+//         from: {
+//           name: "sendgrid",
+//           email: "noreply@debopay.com",
+//         },
+//         subject: `Login link`,
+//         text: `Click the following link to login your account: http://localhost:8000/index?token=${token}`,
+//         html: `<p>Click the following link to login your account: <a href="http://localhost:8000/index?token=${token}">Login</a></p>`,
+//       };
+
+//       sgMail
+//         .send(mailOptions)
+//         .then(() => res.send("Login link sent"))
+//         .catch((err) => {
+//           console.log(err);
+//           res.status(500).send("Error sending email");
+//         });
+//     } else {
+//       res.status(200).send({ msg: "Email does not exist" });
+//     }
+//   } catch (error) {
+//     res.status(400).send({ success: false, msg: error.message });
+//   }
+// });
+
+app.post("/login-by-email", async (req, res) => {
+  try {
+    const userEmail = req.body.email;
+    const userData = await userModel.findOne({ email: userEmail }).exec();
+
+    if (userData) {
+      var token =
+        Math.random().toString(36).substring(2, 15) +
+        Math.random().toString(36).substring(2, 15);
+      const newEmail = await userModel.updateOne(
+        { email: userEmail },
+        { $set: { token: token } }
+      );
+      res.status(200).send({
+        success: true,
+        msg: "link has been sent to your email, kindly click on the link.",
+      });
+
+      const transporter = Nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+          user: "robin.cyril@appsimagica.com",
+          pass: "luohzfqmgbxnbmuh", // Update this with your Gmail password
+        },
+      });
+
+      // send email to password reset
+      const mailOptions = {
+        to: userEmail,
+        subject: `Login link`,
+        text: `Click the following link to access your account: http://localhost:8000/index`,
+        html: `<p>Click the following link to access your account: http://localhost:8000/index</p>`,
+      };
+
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          console.log(err);
+          res.send("Error sending email");
+        } else {
+          console.log(info);
+          res.send("Link sent");
+        }
+      });
+    } else {
+      res.status(200).send({ msg: "Email does not exist" });
+    }
+  } catch (error) {
+    res.status(400).send({ success: false, msg: error.message });
+  }
+});
+
+// Nodemailer ends
+//  Google Login starts
+
+app.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+  })
+);
+
+app.get(
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  function (req, res) {
+    // Successful authentication, redirect to the desired page
+    res.redirect("/index");
+  }
+);
+//  Google Login ends
 // Chat server
 
 // Node server will handle socet.io connection
@@ -410,6 +626,70 @@ app.post("/update/v1/:id", upload3.single("Photo"), async (req, res) => {
   }
 });
 // Profile update ends
+
+// Category
+app.post("/createCategory", async (req, res) => {
+  try {
+    const category_data = await categoryModel.find();
+    let checking = false;
+
+    if (category_data.length > 0) {
+      for (let i = 0; i < category_data.length; i++) {
+        if (
+          category_data[i].category.toLowerCase() ===
+          req.body.category.toLowerCase()
+        ) {
+          checking = true;
+          break;
+        }
+      }
+    }
+
+    if (checking) {
+      return res.status(200).send({
+        success: false,
+        msg: "This category already exists.",
+      });
+    }
+const {category,category_id}=req.body;
+    // Create a new category instance
+    const newCategory = new categoryModel({
+      category,
+      category_id
+    });
+    console.log(category);
+
+    // Save the new category to the database
+    const savedCategory = await newCategory.save();
+
+    res.status(201).send({
+      success: true,
+      msg: "Category created successfully.",
+      data: savedCategory,
+    });
+  } catch (error) {
+    res.status(400).send({
+      success: false,
+      msg: error.message,
+    });
+  }
+});
+
+
+// category ends
+
+
+// TradingView Charts starts
+
+// app.get(':/symbol/:interval', async(req,res)=>{
+//   try {
+//     const {symbol, interval}=req.params;
+//     const resp=await globalThis()
+//   } catch (error) {
+    
+//   }
+// })
+// TradingView Charts ends
 
 // Course Starts
 
@@ -680,14 +960,40 @@ app.get("/Liberary", (req, res) => {
 });
 
 app.get("/library-upload", (req, res) => {
-  res.render("library-upload");
+
+  categoryModel
+    .find()
+    .then((data) => {
+      res.render("library-upload", { data: data });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("An error occurred");
+    });
 });
+
 
 // Library Ends
 
-// Delete
+// Delete CHapters
 
 app.get("/delete/:id", isAuthenticated, (req, res) => {
+  console.log(req.params.id);
+
+  chapter
+    .findByIdAndRemove(req.params.id)
+    .then(() => {
+      res.send("successfully deleted");
+    })
+    .catch((err) => console.log(err));
+});
+// Delete Chapter ENDS
+
+// Delete Course
+
+app.get("/delete/V1/:id", isAuthenticated, (req, res) => {
+  console.log(req.params.id);
+
   course
     .findByIdAndRemove(req.params.id)
     .then(() => {
@@ -695,7 +1001,21 @@ app.get("/delete/:id", isAuthenticated, (req, res) => {
     })
     .catch((err) => console.log(err));
 });
-// Delete ENDS
+// Delete Course ENDS
+
+// Delete Library starts
+
+app.get("/delete/V2/:id", isAuthenticated, (req, res) => {
+  console.log(req.params.id);
+
+  library
+    .findByIdAndRemove(req.params.id)
+    .then(() => {
+      res.send("successfully deleted");
+    })
+    .catch((err) => console.log(err));
+});
+// Delete Library ENDS
 
 app.get("/course-edit", (req, res) => {
   // console.log(req.user._id);
@@ -848,9 +1168,6 @@ app.post(
 
 // Library Edit ends
 
-
-
-
 // Course Edit starts
 app.post(
   "/update-selected-course",
@@ -861,13 +1178,17 @@ app.post(
 
     // Extract file_name and category and take the first element if they are arrays
     const updatedCourse = {
-      file_name: Array.isArray(req.body.file_name)? req.body.file_name[0] : req.body.file_name,
+      file_name: Array.isArray(req.body.file_name)
+        ? req.body.file_name[0]
+        : req.body.file_name,
       price: Array.isArray(req.body.price) ? req.body.price[0] : req.body.price,
       Photo: req.files["Photo"][0].filename,
     };
 
     // Convert selectedVideoIds to an array if it's not already one
-    const idsArray = Array.isArray(selectedVideoIds)? selectedVideoIds : [selectedVideoIds];
+    const idsArray = Array.isArray(selectedVideoIds)
+      ? selectedVideoIds
+      : [selectedVideoIds];
 
     // Use Promise.all to update each video with its ID in parallel
     Promise.all(
@@ -886,42 +1207,46 @@ app.post(
 );
 // Course Edit Ends
 
-
-
 // Chapter Starts
-app.post('/update-selected-chapters', upload.fields([{ name: 'video', maxCount: 2 }, { name: 'Photo', maxCount: 2 }]), (req, res) => {
-  const selectedChapterIds = req.body.selectedItems;
-  console.log(selectedChapterIds);
+app.post(
+  "/update-selected-chapters",
+  upload.fields([
+    { name: "video", maxCount: 2 },
+    { name: "Photo", maxCount: 2 },
+  ]),
+  (req, res) => {
+    const selectedChapterIds = req.body.selectedItems;
+    console.log(selectedChapterIds);
 
-  // Extract chapter_name and program and take the first element if they are arrays
-  const updatedChapter = {
-    chapter_name: Array.isArray(req.body.chapter_name) ? req.body.chapter_name[1] : req.body.chapter_name,
-    program: Array.isArray(req.body.program) ? req.body.program[1] : req.body.program,
-    video: req.files['video'][0].filename,
-    Photo: req.files['Photo'][0].filename,
-    
-  };
-console.log(updatedChapter);
-  
+    // Extract chapter_name and program and take the first element if they are arrays
+    const updatedChapter = {
+      chapter_name: req.body.chapter_name[0],
+      program: req.body.program[0],
+      video: req.files["video"][0].filename,
+      Photo: req.files["Photo"][0].filename,
+    };
+    console.log(updatedChapter);
 
-  
+    // Convert selectedChapterIds to an array if it's not already one
+    const chapterIdsArray = Array.isArray(selectedChapterIds)
+      ? selectedChapterIds
+      : [selectedChapterIds];
 
-
-  // Convert selectedChapterIds to an array if it's not already one
-  const chapterIdsArray = Array.isArray(selectedChapterIds) ? selectedChapterIds : [selectedChapterIds];
-
-  // Use Promise.all to update each chapter with its ID in parallel
-  Promise.all(chapterIdsArray.map((chapterId) => {
-    return chapter.findByIdAndUpdate(chapterId, updatedChapter);
-  }))
-    .then(() => {
-      res.send('Successfully updated selected Chapters!');
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).send('Error occurred while updating the Chapters.');
-    });
-});
+    // Use Promise.all to update each chapter with its ID in parallel
+    Promise.all(
+      chapterIdsArray.map((chapterId) => {
+        return chapter.findByIdAndUpdate(chapterId, updatedChapter);
+      })
+    )
+      .then(() => {
+        res.send("Successfully updated selected Chapters!");
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(500).send("Error occurred while updating the Chapters.");
+      });
+  }
+);
 
 // Chapter Edit
 // Server listening

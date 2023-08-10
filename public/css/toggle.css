@@ -1,0 +1,56 @@
+.toggler .toggle-container {
+  position: relative;
+}
+
+.toggler .toggle-container .toggle-btn {
+  display: inline-block;
+  width: 50px;
+  height: 30px;
+  border-radius: 15px; 
+  background-color: #ddd;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toggler .toggle-container .toggle-btn:before {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #fff;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.3s ease;
+}
+
+.toggler #dark-mode-toggle:checked + .toggle-btn {
+  background-color: #333;
+}
+
+.toggler #dark-mode-toggle:checked + .toggle-btn::before {
+  transform: translateX(20px);
+}
+
+ .dark-mode {
+  background-color: #121212;
+  color: #fff;
+  transition: transform 0.3s ease;
+
+}
+
+ .dark-mode h1,h2,h3 {
+  color: white; /* white color for headers in dark mode */
+}
+ .dark-mode .card-statistics {
+  background: black; /* black color for headers in dark mode */
+  transition: background-color 0.3s ease;
+}
+
+ .dark-mode p {
+  color: #ddd; /* white color for paragraphs in dark mode */
+}
