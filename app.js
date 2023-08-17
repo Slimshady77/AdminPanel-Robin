@@ -16,7 +16,7 @@ const passport = require("passport");
 
 const BodyParser = require("body-parser");
 const expressSession = require("express-session");
-// const fileStore = require("session-file-store")(expressSession)
+const fileStore = require("session-file-store")(expressSession);
 // const cookieParser = require('cookie-parser');
 app.use(BodyParser.urlencoded({ extended: false }));
 app.use(express.json());
@@ -37,12 +37,14 @@ const questionModel = require("./model/question");
 const categoryModel = require("./model/category");
 const PORT = process.env.PORT;
 const secret = process.env.SECRET;
+
 app.use(
   expressSession({
     secret: secret,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false, maxAge: 60000 },
+    // store: new fileStore()
   })
 );
 // user Passport middleware
@@ -51,6 +53,7 @@ app.use(passport.session());
 
 // call Local strategy
 const { initializingPassport } = require("./passportConfig");
+const user = require("./model/user");
 initializingPassport(passport);
 
 // var authJWT = (req, res, next) => {
@@ -88,12 +91,15 @@ const io = require("socket.io")(http, {
 //     })
 // );
 
-function isAuthenticated(req, res, done) {
-  if (req.user) {
-    return done();
+function isAuthenticated(req, res, next) {
+  console.log("isAuthenticated middleware executed");
+  console.log("req.user:", req.user);
+
+  if (req.isAuthenticated()) {
+    return next();
   }
-  res.send("not allowed!");
-  return false;
+
+  res.status(401).send("Not authorized");
 }
 
 // app.use((req,res,next)=>{
@@ -114,15 +120,15 @@ function isAuthenticated(req, res, done) {
 // }
 
 // Routes
-app.get('/category-upload', (req,res)=>{
-  res.render('category-upload')
-})
+app.get("/category-upload", (req, res) => {
+  res.render("category-upload");
+});
 app.get("/index", (req, res) => {
   res.render("index");
 });
-app.get('/setting', (req,res)=>{
+app.get("/setting", (req, res) => {
   res.render("setting");
-})
+});
 app.get("/index-crypto-currency", (req, res) => {
   res.render("index-crypto-currency");
 });
@@ -203,10 +209,16 @@ app.get("/chart-sparkline", (req, res) => {
   res.render("chart-sparkline");
 });
 app.get("/app-chat", (req, res) => {
-  res.render("app-chat");
+  userModel
+    .findOne(req.body.id)
+    .then((data) => res.render("app-chat", { data: data }))
+    .catch((err) => console.log(err));
 });
 app.get("/course-upload", (req, res) => {
-  res.render("course-upload");
+  course
+    .find()
+    .then((data) => res.render("course-upload", { data: data }))
+    .catch((err) => console.log(err));
 });
 app.get("/login", (req, res) => {
   res.render("login");
@@ -243,8 +255,7 @@ app.get("/chapter-assignment", (req, res) => {
 
 app.get("/user-profile", (req, res) => {
   userModel1
-    .find({_id:'64cba44a4619d1355a3de2bb'
-    })
+    .find({ _id: "64cba44a4619d1355a3de2bb" })
     .then((data) => {
       res.render("user-profile", { data: data }); // Include the data in the render call
     })
@@ -253,7 +264,6 @@ app.get("/user-profile", (req, res) => {
       res.status(500).send("An error occurred");
     });
 });
-
 
 app.get("/Charts", (req, res) => {
   res.render("Charts");
@@ -273,6 +283,30 @@ app.get("/course-chapter-upload", (req, res) => {
   });
 });
 
+app.post("/submit-quiz", async (req, res) => {
+  try {
+    const quizAnswer = {
+      question: req.body.question,
+      option1: req.body.option1,
+      option2: req.body.option2,
+      option3: req.body.option3,
+      option4: req.body.option4,
+      correctAnswer: req.body.correctAnswer,
+    };
+    const quiz = await questionModel(quizAnswer);
+    quiz.save();
+    res.status(201).json({
+      success: true,
+      quiz,
+    });
+  } catch (err) {
+    console.log("internal err");
+    res.status(500).json({
+      success: false,
+      err: err,
+    });
+  }
+});
 // app.get('/', (req, res)=>{
 //     res.redirect(`/${uuidV4()}`);
 // })
@@ -313,7 +347,6 @@ app.post("/auth-register", async (req, res) => {
 });
 
 app.post("/user-profile", async (req, res) => {
-
   const { username, email, mob, status, acheivement, location, pro, program } =
     req.body;
 
@@ -349,12 +382,14 @@ app.post("/user-profile", async (req, res) => {
   }
 });
 
-app.get("/page-account-settings", isAuthenticated, (req, res) => {
+app.get("/admin-profile", isAuthenticated, (req, res) => {
   // res.send();
+  const id = req.user;
+  console.log(id);
   userModel
-    .findById(req.user._id)
+    .findOne(id)
     .then((data) => {
-      res.render("page-account-settings", { data: data });
+      res.render("admin-profile", { data: data });
       // console.log(data);
     })
     .catch((err) => console.log(err));
@@ -460,16 +495,17 @@ app.post("/login-by-email", async (req, res) => {
     const userData = await userModel.findOne({ email: userEmail }).exec();
 
     if (userData) {
-      var token =
-        Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15);
+      const token = generateJwtToken(userData.id);
+      console.log(token);
+
       const newEmail = await userModel.updateOne(
         { email: userEmail },
         { $set: { token: token } }
       );
+
       res.status(200).send({
         success: true,
-        msg: "link has been sent to your email, kindly click on the link.",
+        msg: "link has been sent to your email, kindly click on the link to continue logging in...",
       });
 
       const transporter = Nodemailer.createTransport({
@@ -480,12 +516,11 @@ app.post("/login-by-email", async (req, res) => {
         },
       });
 
-      // send email to password reset
       const mailOptions = {
         to: userEmail,
         subject: `Login link`,
-        text: `Click the following link to access your account: http://localhost:8000/index`,
-        html: `<p>Click the following link to access your account: http://localhost:8000/index</p>`,
+        text: `Click the following link to access your account: http://localhost:8000/verify?token=${token}`,
+        html: `<p>Click the following link to access your account: http://localhost:8000/verify?token=${token}</p>`,
       };
 
       transporter.sendMail(mailOptions, (err, info) => {
@@ -505,6 +540,45 @@ app.post("/login-by-email", async (req, res) => {
   }
 });
 
+function generateJwtToken(userID) {
+  const token = jwt.sign({ userID: userID }, process.env.secret, {
+    expiresIn: "1h",
+  });
+  console.log(userID);
+  return token;
+}
+
+app.get("/verify", async (req, res) => {
+  const token = req.query.token;
+  console.log("Received token:", token);
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.secret);
+    console.log("Decoded token:", decodedToken);
+
+    if (decodedToken && decodedToken.userID) {
+      const user = await userModel.findById(decodedToken.userID).exec();
+      console.log("Found user:", user);
+
+      if (user) {
+        // res.redirect('/login')
+        console.log(`Welcome ${user.username}`);
+        // res.send(`Welcome ${user.username}`);
+        res.redirect("index");
+      } else {
+        console.log("User not found");
+        res.sendStatus(404); // User not found
+      }
+    } else {
+      console.log("Invalid token or missing userID");
+      res.sendStatus(401); // Invalid token or missing userID
+    }
+  } catch (error) {
+    console.log("Token verification error:", error.message);
+    res.sendStatus(401); // Invalid token
+  }
+});
+
 // Nodemailer ends
 //  Google Login starts
 
@@ -517,10 +591,13 @@ app.get(
 
 app.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passport.authenticate("google", {
+    failureRedirect: "/login",
+    successRedirect: "/admin-profile",
+  }),
   function (req, res) {
     // Successful authentication, redirect to the desired page
-    res.redirect("/index");
+    // res.redirect("/index");
   }
 );
 //  Google Login ends
@@ -651,11 +728,11 @@ app.post("/createCategory", async (req, res) => {
         msg: "This category already exists.",
       });
     }
-const {category,category_id}=req.body;
+    const { category, category_id } = req.body;
     // Create a new category instance
     const newCategory = new categoryModel({
       category,
-      category_id
+      category_id,
     });
     console.log(category);
 
@@ -675,9 +752,7 @@ const {category,category_id}=req.body;
   }
 });
 
-
 // category ends
-
 
 // TradingView Charts starts
 
@@ -686,7 +761,7 @@ const {category,category_id}=req.body;
 //     const {symbol, interval}=req.params;
 //     const resp=await globalThis()
 //   } catch (error) {
-    
+
 //   }
 // })
 // TradingView Charts ends
@@ -873,7 +948,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage, fileFilter: FileFilter });
 
-// Liberary Starts
+// Library Starts
 app.post(
   "/library-upload",
   upload.fields([{ name: "video" }, { name: "photo" }]),
@@ -950,17 +1025,16 @@ app.post(
 
 // })
 
-app.get("/Liberary", (req, res) => {
+app.get("/Library", (req, res) => {
   library
     .find()
     .then((data) => {
-      res.render("Liberary", { data: data });
+      res.render("Library", { data: data });
     })
     .catch((err) => console.log(err));
 });
 
 app.get("/library-upload", (req, res) => {
-
   categoryModel
     .find()
     .then((data) => {
@@ -971,7 +1045,6 @@ app.get("/library-upload", (req, res) => {
       res.status(500).send("An error occurred");
     });
 });
-
 
 // Library Ends
 

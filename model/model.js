@@ -1,19 +1,18 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-dotenv.config({ path: './config.env' });
-
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config({ path: "./config.env" });
 
 const url = process.env.DATABASE; // Updated the variable name here
 mongoose
   .connect(url, {
     useUnifiedTopology: true,
-    useNewUrlParser: true,  
+    useNewUrlParser: true,
   })
-  .then(() => console.log('Successfully connected to Database!'))
+  .then(() => console.log("Successfully connected to Database!"))
   .catch((err) => console.log(err));
 
 const userSchema = mongoose.Schema({
-    _id: String, 
+  
   fname: {
     type: String,
     // required: true
@@ -35,13 +34,10 @@ const userSchema = mongoose.Schema({
     // required: true
   },
   Photo: String,
-token:{
-  type:String
-}
+  token: {
+    type: String
+  },
 });
 
-
-
- 
-const register = mongoose.model('TOROFX', userSchema);
+const register = mongoose.model("TOROFX", userSchema);
 module.exports = register;
