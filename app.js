@@ -123,7 +123,7 @@ function isAuthenticated(req, res, next) {
 app.get("/category-upload", (req, res) => {
   res.render("category-upload");
 });
-app.get("/index", (req, res) => {
+app.get("/index",isAuthenticated, (req, res) => {
   res.render("index");
 });
 app.get("/setting", (req, res) => {
@@ -559,12 +559,12 @@ app.get("/verify", async (req, res) => {
     if (decodedToken && decodedToken.userID) {
       const user = await userModel.findById(decodedToken.userID).exec();
       console.log("Found user:", user);
-
+ 
       if (user) {
         // res.redirect('/login')
         console.log(`Welcome ${user.username}`);
-        // res.send(`Welcome ${user.username}`);
-        res.redirect("index");
+        // res.send(`Welcome ${user.username}`); 
+        res.render("index");
       } else {
         console.log("User not found");
         res.sendStatus(404); // User not found
