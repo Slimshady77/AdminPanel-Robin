@@ -44,7 +44,7 @@ const userSchema=mongoose.Schema({
     },
     acheivement:String,
     program:String,
-    // Photo:String,
+    photo:String,
 })
 
 const user= new mongoose.model('TOROFX_user', userSchema);

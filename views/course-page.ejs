@@ -91,7 +91,7 @@
                       </thead>
                       <tbody>
                         <% for(var i=0;i<data.length; i++) { %>
-                          <tr class='clickable-row' data-href='course-chapter' style=" cursor: pointer;">
+                          <tr class='clickable-row' data-href='course-chapter/<%= data[i]._id %>' style=" cursor: pointer;">
                             <td>
                               <%= i+1 %>
                             </td>

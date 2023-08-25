@@ -16,11 +16,12 @@ const passport = require("passport");
 
 const BodyParser = require("body-parser");
 const expressSession = require("express-session");
-const fileStore = require("session-file-store")(expressSession);
+// const fileStore = require("session-file-store")(expressSession);
 // const cookieParser = require('cookie-parser');
 app.use(BodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static(__dirname + "/public"));
+// app.use("/course-chapter", express.static("course-chapter"));
 const path = require("path");
 dotenv.config({ path: "./config.env" });
 require("./passport-setup");
@@ -29,7 +30,7 @@ require("./passport-setup");
 
 const { model } = require("mongoose");
 const library = require("./model/library");
-const course = require("./model/course");
+const Course = require("./model/course");
 const userModel = require("./model/model");
 const chapter = require("./model/chapter");
 const userModel1 = require("./model/user");
@@ -47,6 +48,8 @@ app.use(
     // store: new fileStore()
   })
 );
+require("./passport-jwt")(passport);
+
 // user Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
@@ -54,6 +57,7 @@ app.use(passport.session());
 // call Local strategy
 const { initializingPassport } = require("./passportConfig");
 const user = require("./model/user");
+
 initializingPassport(passport);
 
 // var authJWT = (req, res, next) => {
@@ -93,7 +97,7 @@ const io = require("socket.io")(http, {
 
 function isAuthenticated(req, res, next) {
   console.log("isAuthenticated middleware executed");
-  console.log("req.user:", req.user);
+  console.log("req.user:", req.userID);
 
   if (req.isAuthenticated()) {
     return next();
@@ -102,6 +106,10 @@ function isAuthenticated(req, res, next) {
   res.status(401).send("Not authorized");
 }
 
+app.use((req, res, next) => {
+  // console.log("Request Headers:", req.headers);
+  next();
+});
 // app.use((req,res,next)=>{
 //     if(req.cookies.user_id && !req.expressSession.user )
 //     {
@@ -123,9 +131,17 @@ function isAuthenticated(req, res, next) {
 app.get("/category-upload", (req, res) => {
   res.render("category-upload");
 });
-app.get("/index",isAuthenticated, (req, res) => {
+
+// app.get("/index", isAuthenticated, (req, res) => {
+//   if (req.user) {
+//     const id = req.user.id;
+//     res.render("index", { userID: id });
+//   } else res.status(401).json({ msg: "err found" });
+// });
+app.get("/index", isAuthenticated, (req, res) => {
   res.render("index");
 });
+
 app.get("/setting", (req, res) => {
   res.render("setting");
 });
@@ -215,8 +231,7 @@ app.get("/app-chat", (req, res) => {
     .catch((err) => console.log(err));
 });
 app.get("/course-upload", (req, res) => {
-  course
-    .find()
+  Course.find()
     .then((data) => res.render("course-upload", { data: data }))
     .catch((err) => console.log(err));
 });
@@ -255,7 +270,7 @@ app.get("/chapter-assignment", (req, res) => {
 
 app.get("/user-profile", (req, res) => {
   userModel1
-    .find({ _id: "64cba44a4619d1355a3de2bb" })
+    .find({ _id: "64e5b42abd4526dfd776be37" })
     .then((data) => {
       res.render("user-profile", { data: data }); // Include the data in the render call
     })
@@ -272,11 +287,72 @@ app.get("/static-charts", (req, res) => {
   res.render("static-charts");
 });
 
-app.get("/course-chapter", (req, res) => {
-  chapter.find().then((data) => {
-    res.render("course-chapter", { data: data });
-  });
+// GET API for  course/Program starts
+app.get("/course-page", function (req, res) {
+  Course.find()
+    .then((data) => {
+      res.render("course-page", { data: data });
+      console.log(data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 });
+
+// GET API for  program/course ENDS
+
+// app.get("/course-chapter/:id", (req, res) => {
+//   chapter.find().then((data) => {
+//     res.render("course-chapter", { data: data });
+//   });
+// });
+
+// app.get("/course-chapter", (req, res) => {
+//   const chapterId = req.params.id; // Get the chapter ID from the URL parameter
+//   console.log(chapterId)
+//   // Assuming you are using a model named 'Chapter'
+//   chapter.find().then((data) => {
+//     if (!chapter) {
+//       return res.status(404).send("Chapter not found"); // Handle if chapter doesn't exist
+//     }
+//     res.render("course-chapter", { data: data });
+//   }).catch((error) => {
+//     console.error(error);
+//     res.status(500).send("Internal Server Error");
+//   });
+// });
+
+app.get("/course-chapter/:id", (req, res) => {
+  const courseId = req.params.id;
+
+  // Assuming you have a courseChapters field in your Course model
+  Course.findById(courseId)
+    .then((data) => {
+      res.render("course-chapter", { data: data });
+
+      if (!data) {
+        return res.status(404).send("Course not found");
+      }
+      // console.log(data);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+// app.get('/course-chapter/:id ', async (req, res) => {
+//   const courseId = req.params.id;
+//   try {
+//     // Fetch course details and its chapters using courseId
+//     const data1 = await Course.findById(courseId).populate('courseChapters');
+//     console.log(data1)
+//     res.render('course-chapter', { data:data1  });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
+
 app.get("/course-chapter-upload", (req, res) => {
   chapter.find().then((data) => {
     res.render("course-chapter-upload", { data: data });
@@ -345,11 +421,81 @@ app.post("/auth-register", async (req, res) => {
       console.log(err);
     });
 });
+// const fileFilter2 = (req, res, cb) => {
+//   const allowedFileTypes = ["image/png", "image/jpg", "image/png"];
+//   if (allowedFileTypes.includes(file.mimetype)) {
+//     cb(null, true);
+//   } else cb(null, false);
+// };
+// const storage4 = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "./public/user");
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.originalname);
+//   },
+// });
+// const upload4=multer({storage:storage4,fileFilter:fileFilter2});
+// app.post("/user-profile",upload4.single('photo'), async (req, res) => {
+//   const { username, email, mob, status, acheivement, location, pro, program } =
+//     req.body;
+//  const {photo}=req.file;
+//   console.log("Received data from the form:", req.body);
 
-app.post("/user-profile", async (req, res) => {
+//   try {
+//     const user = await userModel1.findOne({ email: email });
+//     console.log("User found in the database:", user);
+
+//     if (user) {
+//       console.log("User already exists!");
+//       return res.status(400).send("User already exists!");
+//     }
+
+//     const register1 = new userModel1({
+//       status,
+//       pro,
+//       program,
+//       email,
+//       username,
+//       location,
+//       mob,
+//       acheivement,
+//       photo: photo ? photo.filename : null,
+//     });
+
+//     await register1.save();
+
+//     console.log("User registered successfully!");
+//     return res.status(200).json({ message: "Registration successful" });
+//   } catch (err) {
+//     console.error("Error occurred while processing registration:", err);
+//     return res.status(500).json({ err: "Internal server error" });
+//   }
+// });
+const fileFilter2 = (req, file, cb) => {
+  const allowedFileTypes = ["image/png", "image/jpg", "image/jpeg"];
+  if (allowedFileTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const storage4 = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/user");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const upload4 = multer({ storage: storage4, fileFilter: fileFilter2 });
+
+app.post("/user-profile", upload4.single("photo"), async (req, res) => {
   const { username, email, mob, status, acheivement, location, pro, program } =
     req.body;
-
+  const photo = req.file;
   console.log("Received data from the form:", req.body);
 
   try {
@@ -370,6 +516,8 @@ app.post("/user-profile", async (req, res) => {
       location,
       mob,
       acheivement,
+      // photo: photo ? photo.filename : null,
+      photo: photo.filename,
     });
 
     await register1.save();
@@ -496,6 +644,7 @@ app.post("/login-by-email", async (req, res) => {
 
     if (userData) {
       const token = generateJwtToken(userData.id);
+
       console.log(token);
 
       const newEmail = await userModel.updateOne(
@@ -519,8 +668,8 @@ app.post("/login-by-email", async (req, res) => {
       const mailOptions = {
         to: userEmail,
         subject: `Login link`,
-        text: `Click the following link to access your account: http://localhost:8000/verify?token=${token}`,
-        html: `<p>Click the following link to access your account: http://localhost:8000/verify?token=${token}</p>`,
+        text: `Click the following link to access your account: http://localhost:8000/verify?token=${token}&userID=${userData.id}`,
+        html: `<p>Click the following link to access your account: http://localhost:8000/verify?token=${token}&userID=${userData.id}</p>`,
       };
 
       transporter.sendMail(mailOptions, (err, info) => {
@@ -551,7 +700,7 @@ function generateJwtToken(userID) {
 app.get("/verify", async (req, res) => {
   const token = req.query.token;
   console.log("Received token:", token);
-
+  console.log("Req User:", req.user);
   try {
     const decodedToken = jwt.verify(token, process.env.secret);
     console.log("Decoded token:", decodedToken);
@@ -559,12 +708,12 @@ app.get("/verify", async (req, res) => {
     if (decodedToken && decodedToken.userID) {
       const user = await userModel.findById(decodedToken.userID).exec();
       console.log("Found user:", user);
- 
+
       if (user) {
         // res.redirect('/login')
         console.log(`Welcome ${user.username}`);
-        // res.send(`Welcome ${user.username}`); 
-        res.render("index");
+        // res.send(`Welcome ${user.username}`);
+        res.render("index", { user: user });
       } else {
         console.log("User not found");
         res.sendStatus(404); // User not found
@@ -578,6 +727,25 @@ app.get("/verify", async (req, res) => {
     res.sendStatus(401); // Invalid token
   }
 });
+// app.get("/verify", passport.authenticate("jwt", { session: false }), async (req, res) => {
+//   try {
+//     const user = req.user;
+//     const authorizationHeader = req.headers.authorization;
+//     console.log("Authorization Header:", authorizationHeader);
+//     // Rest of your code
+//     if (user) {
+//       console.log(`Welcome ${user.username}`);
+//       // Render the index view with the user data
+//       res.render("index", { user: user }); // Pass the user data to the view
+//     } else {
+//       console.log("User not found");
+//       res.sendStatus(404); // User not found
+//     }
+//   } catch (error) {
+//     console.log("Token verification error:", error.message);
+//     res.sendStatus(401); // Invalid token
+//   }
+// });
 
 // Nodemailer ends
 //  Google Login starts
@@ -600,6 +768,7 @@ app.get(
     // res.redirect("/index");
   }
 );
+
 //  Google Login ends
 // Chat server
 
@@ -640,21 +809,6 @@ io.on("connection", (socket) => {
   });
 });
 // End of video Server
-
-// GET API for  course/Program starts
-app.get("/course-page", function (req, res) {
-  course
-    .find()
-    .then((data) => {
-      res.render("course-page", { data: data });
-      console.log(data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-});
-
-// GET API for  program/course ENDS
 
 // Profile update
 const filter1 = (req, file, cb) => {
@@ -813,7 +967,7 @@ app.post(
     const photoPath = path.basename(files.photo[0].path);
 
     // Assuming you have a Mongoose model called `li    brary` for saving the file paths
-    const courseMain = new course({
+    const courseMain = new Course({
       file_name,
       price,
       duration,
@@ -1067,8 +1221,7 @@ app.get("/delete/:id", isAuthenticated, (req, res) => {
 app.get("/delete/V1/:id", isAuthenticated, (req, res) => {
   console.log(req.params.id);
 
-  course
-    .findByIdAndRemove(req.params.id)
+  Course.findByIdAndRemove(req.params.id)
     .then(() => {
       res.send("successfully deleted");
     })
@@ -1093,8 +1246,7 @@ app.get("/delete/V2/:id", isAuthenticated, (req, res) => {
 app.get("/course-edit", (req, res) => {
   // console.log(req.user._id);
 
-  course
-    .find()
+  Course.find()
     .then((data) => {
       res.render("course-edit", { data: data });
       // console.log(data);

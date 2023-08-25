@@ -15,14 +15,6 @@ exports.initializingPassport = (passport) => {
         if (!isPasswordValid)
           return done(null, false, { message: "Incorrect password" });
         else {
-          // Store user information in the session
-          // const userSessionData = {
-          //   id: user._id,
-          //   username: user.username,
-          //   // Add more user details as needed
-          // };
-          // console.log(userSessionData);
-
           return done(null, user);
         }
       } catch (error) {
@@ -33,23 +25,22 @@ exports.initializingPassport = (passport) => {
 };
 
 passport.serializeUser((user, done) => {
-  done(null, user.email);
+  done(null, user.id);
 });
-passport.deserializeUser(async (email, done) => {
+passport.deserializeUser(async (is, done) => {
   try {
-    const user = await userModel.findOne({email});
+    const user = await userModel.findOne({ id });
     done(null, user);
   } catch (error) {
     done(error, false);
   }
 });
 
-
-exports.isAuthenticated=(req, res, done)=>{
-  if (req.user) {
-    console.log(req.user)
-    return done();
-  }
-  res.send("not allowed!");
-  return false;
-}
+// exports.isAuthenticated=(req, res, done)=>{
+//   if (req.user) {
+//     console.log(req.user)
+//     return done();
+//   }
+//   res.send("not allowed!");
+//   return false;
+// }

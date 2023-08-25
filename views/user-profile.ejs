@@ -144,8 +144,8 @@
                         <div class="h-avatar is-big">
                           <img
                             class="avatar"
-                            src="https://via.placeholder.com/150x150"
-                            data-demo-src="assets/img/avatars/photos/9.jpg"
+                            src="user/<%= data.photo %>"
+                            <!-- data-demo-src="assets/img/avatars/photos/9.jpg" -->
                             alt=""
                             data-user-popover="1"
                           />
@@ -172,7 +172,7 @@
                           <div class="h-avatar is-small">
                             <img
                               class="avatar1"
-                              src="https://via.placeholder.com/150x150"
+                              src="user/<%= data.photo %>"
                               data-demo-src="assets/img/avatars/photos/23.jpg"
                               alt=""
                               data-user-popover="21"
@@ -202,7 +202,7 @@
 
                   <% for(let i=0;i<data.length;i++){ %>
                   <div class="col-md-6" style="margin: 10px 0px 10px 0px">
-                    <form action="/user-profile" method="post">
+                    <form action="/user-profile" method="post" enctype="multipart/form-data">
                       <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1"
                           >@</span
@@ -296,6 +296,14 @@
                           class="form-control"
                           name="achievement"
                           placeholder="Achievement"
+                        />
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">@</span>
+                        <input
+                          type="file"
+                          class="form-control"
+                          name="photo"
                         />
                       </div>
 
