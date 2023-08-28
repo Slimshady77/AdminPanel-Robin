@@ -45,14 +45,15 @@
         <nav class="navbar navbar-expand-md toggler">
 
             <!-- begin navbar-header -->
-            <div class="navbar-header d-flex align-items-center">
+
+            <!-- <div class="navbar-header d-flex align-items-center">
                 <a href="javascript:void:(0)" class="mobile-toggle"><i class="ti ti-align-right"></i></a>
-                <a class="navbar-brand" href="index">
-                    <img src="img/torofx.png" class="img-fluid logo-desktop" alt="logo"
+                <a class="navbar-brand" href="/index">
+                    <img src="../public/img/torofx.png" class="img-fluid logo-desktop" alt="logo"
                         style="width: 80px; height: 80px; margin-left: 60px;" />
-                    <img src="img/logo-icon.jpg" class="img-fluid logo-mobile" alt="logo" />
+                    <img src="../public/img/logo-icon.jpg" class="img-fluid logo-mobile" alt="logo" />
                 </a>
-            </div>
+            </div> -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="ti ti-align-left"></i>
@@ -78,7 +79,7 @@
                                 <a class="dropdown-item nav-link" href="javascript:void(0)">Something else here</a>
                             </div> -->
                         </li> 
-                        <li/ class="nav-item full-screen d-none d-lg-block" id="btnFullscreen">
+                        <li class="nav-item full-screen d-none d-lg-block" id="btnFullscreen">
                             <a href="javascript:void(0)" class="nav-link expand">
                                 <i class="icon-size-fullscreen"></i>
                             </a>
@@ -157,7 +158,7 @@
                             Video: <%= data[i].video %></br>
                             <h5 class="card-title">Chapter</h5>
                     <p class="card-text">Your Chapter Here</p>
-                    <a href="#" class="btn btn-primary">Click me</a>
+                    <a href="/chapter-edit/<%= data[i].cid  %>" class="btn btn-primary">Edit</a>
                       <a href="/course-chapter-upload/<%= data[i].cid  %>" type="btn-success"
                           style="background-color: skyblue; border-radius: 10px; margin-top: 10px; padding: 10px; ">+
                           Add

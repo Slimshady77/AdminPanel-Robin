@@ -1294,11 +1294,13 @@ app.get("/course-edit", (req, res) => {
     });
 });
 
-app.get("/chapter-edit", (req, res) => {
+app.get("/chapter-edit/:id", (req, res) => {
   // console.log(req.user._id);
+const id=req.params.id;
+console.log(`course id is ${id}`);
 
   chapter
-    .find()
+    .find({cid:id})
     .then((data) => {
       res.render("chapter-edit", { data: data });
       // console.log(data);
