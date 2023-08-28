@@ -1281,10 +1281,10 @@ app.get("/delete/V2/:id", isAuthenticated, (req, res) => {
 });
 // Delete Library ENDS
 
-app.get("/course-edit", (req, res) => {
+app.get("/course-edit/:id", (req, res) => {
   // console.log(req.user._id);
-
-  Course.find()
+const id = req.params.id;
+  Course.find({_id:id})
     .then((data) => {
       res.render("course-edit", { data: data });
       // console.log(data);
@@ -1310,29 +1310,29 @@ console.log(`course id is ${id}`);
     });
 });
 
-app.get("/library-edit", (req, res) => {
-  library
-    .find()
-    .then((data) => {
-      res.render("library-edit", { data: data });
-      console.log(data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-});
+// app.get("/library-edit", (req, res) => {
+//   library
+//     .find()
+//     .then((data) => {
+//       res.render("library-edit", { data: data });
+//       console.log(data);
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+// });
 
-// app.get('/library-edit/:id', (req, res) => {
+app.get('/library-edit/:id', (req, res) => {
 
-//     library.findById(req.params.id)
-//         .then((data) => {
-//             console.log(data);
-//             res.render('library-edit', { data: data });
-//         })
-//         .catch((error) => {
-//             console.log(error);
-//         })
-// })
+    library.findById({_id:req.params.id})
+        .then((data) => {
+            console.log(data);
+            res.render('library-edit', { data: data });
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+})
 
 // EDIT STARTS
 app.post("/edit/:id", (req, res) => {
@@ -1389,14 +1389,15 @@ app.post("/edit/:id", (req, res) => {
 //       });
 //   });
 app.post(
-  "/update-selected-videos",
+  "/update-selected-videos/:id",
   upload.fields([
     { name: "video", maxCount: 2 },
     { name: "Photo", maxCount: 2 },
   ]),
   (req, res) => {
-    const selectedVideoIds = req.body.selectedItems;
-    console.log(selectedVideoIds);
+    const id=req.params.id;
+    // const selectedVideoIds = req.body.selectedItems;
+    // console.log(selectedVideoIds);
 
     // Extract file_name and category and take the first element if they are arrays
     const updatedVideo = {
@@ -1411,9 +1412,9 @@ app.post(
     };
 
     // Convert selectedVideoIds to an array if it's not already one
-    const videoIdsArray = Array.isArray(selectedVideoIds)
+    const videoIdsArray = Array.isArray(id)
       ? selectedVideoIds
-      : [selectedVideoIds];
+      : [id];
 
     // Use Promise.all to update each video with its ID in parallel
     Promise.all(
