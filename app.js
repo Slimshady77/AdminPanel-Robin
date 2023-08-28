@@ -373,8 +373,9 @@ app.get("/course-chapter/:id", (req, res) => {
     ])
     .then((data) => {
       if (!data || data.length === 0) {
-        console.log(`No course found for courseId: ${courseId}`);
-        return res.status(404).send("Course not found");
+        res.redirect(`/course-chapter-upload/${courseId}`);
+        console.log(`No chapters found for courseId: ${courseId}`);
+        // return res.status(404).send("Chapters not found");
       }
       console.log("Course found:", data);
       res.render("course-chapter", { data: data });
@@ -1347,7 +1348,7 @@ app.post("/edit/:id", (req, res) => {
   //         contentType: 'image/jpg',
   //     };
   // }
-  course
+  Course
     .findByIdAndUpdate(req.params.id, updatedit)
     .then(() => {
       // res.redirect('course-page');
