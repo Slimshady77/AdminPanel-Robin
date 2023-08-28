@@ -322,24 +322,24 @@ app.get("/course-page", function (req, res) {
 //   });
 // });
 
-app.get("/course-chapter/:id", (req, res) => {
-  const courseId = req.params.id;
+// app.get("/course-chapter/:id", (req, res) => {
+//   const courseId = req.params.id;
 
-  // Assuming you have a courseChapters field in your Course model
-  Course.findById(courseId)
-    .then((data) => {
-      res.render("course-chapter", { data: data });
+//   // Assuming you have a courseChapters field in your Course model
+//   chapter.findById(courseId)
+//     .then((data) => {
+//       res.render("course-chapter", { data: data });
 
-      if (!data) {
-        return res.status(404).send("Course not found");
-      }
-      // console.log(data);
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).send("Internal Server Error");
-    });
-});
+//       if (!data) {
+//         return res.status(404).send("Course not found");
+//       }
+//       // console.log(data);
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//       res.status(500).send("Internal Server Error");
+//     });
+// });
 
 // app.get('/course-chapter/:id ', async (req, res) => {
 //   const courseId = req.params.id;
@@ -353,7 +353,41 @@ app.get("/course-chapter/:id", (req, res) => {
 //   }
 // });
 
-app.get("/course-chapter-upload", (req, res) => {
+app.get("/course-chapter/:id", (req, res) => {
+  const courseId = req.params.id;
+
+  // Assuming you have a courseChapter field in your chapter schema
+  chapter
+    .aggregate([
+      {
+        $match: { cid: courseId }, // Filter chapters by courseChapter
+      },
+      {
+        $lookup: {
+          from: "TOROFX_courses", // Use the correct model or collection name
+          localField: "cid",
+          foreignField: "_id",
+          as: "courseDetails", // Name for the new field containing course information
+        },
+      },
+    ])
+    .then((data) => {
+      if (!data || data.length === 0) {
+        console.log(`No course found for courseId: ${courseId}`);
+        return res.status(404).send("Course not found");
+      }
+      console.log("Course found:", data);
+      res.render("course-chapter", { data: data });
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+app.get("/course-chapter-upload/:cid", (req, res) => {
+  const cid = req.params.cid;
+  console.log(`course id is ${cid}`);
   chapter.find().then((data) => {
     res.render("course-chapter-upload", { data: data });
   });
@@ -1016,9 +1050,11 @@ const storage2 = multer.diskStorage({
 const upload2 = multer({ storage: storage2, fileFilter: Filter });
 
 app.post(
-  "/course-chapter-upload",
+  "/course-chapter-upload/:cid",
   upload2.fields([{ name: "video" }, { name: "Photo" }]),
   (req, res) => {
+    const cid = req.params.cid;
+    console.log(cid);
     const { chapter_name, program } = req.body;
     const files = req.files;
     if (!files || !files.Photo || !files.video) {
@@ -1033,6 +1069,7 @@ app.post(
       program,
       Photo: photoPath,
       video: videoPath,
+      cid: cid,
     });
     chpater_upload
       .save()

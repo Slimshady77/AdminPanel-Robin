@@ -135,7 +135,7 @@
                         <li aria-current="page" class="breadcrumb-item active text-primary">
                           Main Program
                         </li>
-                        <a href="/course-chapter-upload" type="btn-success"
+                        <a href="/course-chapter-upload/<%= data._id %>" type="btn-success"
                           style="background-color: white; border-radius: 10px; margin-top: 50px; padding: 20px; position: sticky;">+
                           Add
                           Chapters</a>
@@ -143,55 +143,38 @@
                     </nav>
                   </div>
                 </div>
-                <div class="container mt-5">
-                  <div class="row">
-                    <div class="col-lg-12">
-                      <% if( data.length != 0) { %>
-                        <div class="table-responsive">
-                          <table class="table table-dark table-striped" id="chapter">
-                            <thead>
-                              <tr>
-                                <th style="color: white">#</th>
-                                <th style="color: white">Chapter Name</th>
-                                <th style="color: white">Program</th>
-                                <!-- <th style="color:white">Duration</th> -->
-                                <th style="color: white">Thumbnail</th>
-                                <th style="color: white">Video</th>
-                                <th style="color: white">Action</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <!-- <% for(var i=0; i<data.length; i++) { %> -->
-                                <tr class='clickable-row' data-href='chapter-assignment' style="cursor: pointer;">
-                                  <td><%= i+1 %></td>
-                                  <!-- <td><%= data[i].chapter_name %></td> -->
-                                  <td><%= data.file_name %></td>
-                                  <td><%= data.courseChapter %></td>
-                                  <!-- <td><%= data[i].Photo %></td> -->
-                                  <!-- <td><%= data[i].video %></td> -->
-                                  <td><%= data.courseId %></td>
-
-                               <td> <a href="/chapter-edit"><i class="nav-icon ti ti-pencil-alt"> </i></a>
-                                <a href="/delete/<%= data[i]._id %>"><i class="nav-icon ti ti-trash"></i></i></a>
-                                </td>
-                                </tr>
-                              <!-- <% } %> -->
-                            </tbody>
-                          </table>
-                        </div>
-                      <% } else { %>
-                       <h1>No record Found</h1> 
-                      <% } %>
-                    </div>
+              
+                
+                    <% if (data.length > 0) { %>
+                      <ul>
+                        <% for (let i = 0; i < data.length; i++) { %>
+                          <li>
+                            <div class="card" style="width: 18rem;">
+                              <div class="card-body">
+                            Chapter Name: <%= data[i].chapter_name %><br>
+                            Course Chapter: <%= data[i].courseChapter %><br>
+                            Photo: <%= data[i].Photo %></br>
+                            Video: <%= data[i].video %></br>
+                            <h5 class="card-title">Chapter</h5>
+                    <p class="card-text">Your Chapter Here</p>
+                    <a href="#" class="btn btn-primary">Click me</a>
+                      <a href="/course-chapter-upload/<%= data[i].cid %>" type="btn-success"
+                          style="background-color: skyblue; border-radius: 10px; margin-top: 10px; padding: 10px; ">+
+                          Add
+                          Chapters</a>
                   </div>
                 </div>
-                <h1>Chapter Name: <%= data.file_name %></h1>
- <h1> <td><%= data.chapter_name %></td></h1>
-  <h1><td><%= data.file_name %></td></h1>
-  <h1><td><%= data.courseChapter %></td></h1>
-  <h1><td><%= data.Photo %></td></h1>
-  <h1><td><%= data.video %></td></h1>
-  <h1><td><%= data.courseId %></td></h1>
+               
+                            <!-- Display other chapter information as needed -->
+                          </li>
+                        <% } %>
+                      </ul>
+                    <% } else { %>
+                      <p>No chapters found.</p>
+                    <% } %>
+                 
+                
+
                 <!-- end page title -->
               </div>
             </div>

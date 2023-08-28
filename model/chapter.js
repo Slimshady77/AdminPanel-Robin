@@ -15,7 +15,7 @@ const courseSchema = mongoose.Schema({
     Photo: [String],
     video:[String],
     cid:String,
-    courseChapter:String
+    // courseChapter:String
 })
 
 const chapter = mongoose.model('TOROFX_Chapter', courseSchema);
