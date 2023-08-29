@@ -98,7 +98,7 @@
                                     </thead>
                                     <tbody>
                                       <% for(var i=0; i < data.length; i++) { %>
-                                        <tr class="clickable-row" data-href="user-profile" style="cursor: pointer;">
+                                        <tr class="clickable-row" data-href="user-profile/<%= data[i]._id %>" style="cursor: pointer;">
                                           <td><%= i+1 %></td>
                                           <td><%= data[i].status %></td>
                                           <td><%= data[i].program %></td>

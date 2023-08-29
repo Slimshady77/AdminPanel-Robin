@@ -14,18 +14,18 @@
     <meta name="author" content="appsImagica" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- app favicon -->
-    <link rel="shortcut icon" href="img/favicon.webp" />
+    <link rel="shortcut icon" href="/img/favicon.webp" />
     <!-- google fonts -->
     <link
       href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
       rel="stylesheet"
     />
     <!-- plugin stylesheets -->
-    <link rel="stylesheet" type="text/css" href="css/vendors.css" />
+    <link rel="stylesheet" type="text/css" href="/css/vendors.css" />
     <!-- app style -->
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <link href="css/dash.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="css/toggle.css" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <link href="/css/dash.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/css/toggle.css" />
     <style>
       .container-fluid .column .grid-item {
         text-align: center;
@@ -83,13 +83,78 @@
         <div class="loader">
           <div class="h-100 d-flex justify-content-center">
             <div class="align-self-center">
-              <img src="img/loader/loader.svg" alt="loader" />
+              <img src="/img/loader/loader.svg" alt="loader" />
             </div>
           </div>
         </div>
         <!-- end pre-loader -->
         <!-- begin app-header -->
-        <%- include('../common/header.ejs') %>
+        <header class="app-header top-bar">
+          <!-- begin navbar -->
+          <nav class="navbar navbar-expand-md toggler">
+  
+              <!-- begin navbar-header -->
+              <div class="navbar-header d-flex align-items-center">
+                  <a href="javascript:void:(0)" class="mobile-toggle"><i class="ti ti-align-right"></i></a>
+                  <a class="navbar-brand" href="index">
+                      <img src="/img/torofx.png" class="img-fluid logo-desktop" alt="logo"
+                          style="width: 80px; height: 80px; margin-left: 60px;" />
+                      <img src="/img/logo-icon.jpg" class="img-fluid logo-mobile" alt="logo" />
+                  </a>
+              </div>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <i class="ti ti-align-left"></i>
+              </button>
+              <!-- end navbar-header -->
+              <!-- begin navigation -->
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <div class="navigation d-flex">
+                      <ul class="navbar-nav nav-left">
+                          <li class="nav-item">
+                              <a href="javascript:void(0)" class="nav-link sidebar-toggle">
+                                  <i class="ti ti-align-right"></i>
+                              </a>
+                          </li>
+                       
+                              <!-- <a href="javascript:void(0)" class="nav-link " id="navbarDropdown1" role="button"
+                                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Drop Down
+                                  <i class="fa fa-angle-down"></i>
+                              </a>
+                              <div class="dropdown-menu animated fadeIn" aria-labelledby="navbarDropdown">
+                                  <a class="dropdown-item nav-link" href="javascript:void(0)">Action</a>
+                                  <a class="dropdown-item nav-link" href="javascript:void(0)">Another action</a>
+                                  <a class="dropdown-item nav-link" href="javascript:void(0)">Something else here</a>
+                              </div> -->
+                          </li> 
+                          <li class="nav-item full-screen d-none d-lg-block" id="btnFullscreen">
+                              <a href="javascript:void(0)" class="nav-link expand">
+                                  <i class="icon-size-fullscreen"></i>
+                              </a>
+                          </li>
+                          <h1 style="margin-top: 10px;">Welcome To TOROFX</h1>
+  
+                          
+                            
+                    
+  
+                              <div class="profile">
+                              <i class="nav-icon ti ti-bell" style="color: aliceblue;height: 50px; width: 50px; margin-left: 180px; margin-top: 100px;" ></i>
+                                <a href="admin-profile"><img  src="/img/Frame.png" alt="profilePic" style="height: 50px; width: 50px; margin-left: 150px;"></a>  
+                              </div>
+                         
+                       
+                  </div>
+              </div>
+  
+              <div class="toggle-container" style="margin-right: 50px;">
+                  <input type="checkbox" id="dark-mode-toggle" style="opacity: 0;">
+                  <label for="dark-mode-toggle" class="toggle-btn" ></label>
+              </div>
+              <!-- end navigation -->
+          </nav>
+          <!-- end navbar -->
+      </header>
 
         <!-- end app-header -->
         <!-- begin app-container -->
@@ -141,13 +206,12 @@
                   <div class="col-md-6">
                     <div class="column is-3">
                       <div class="grid-item">
-                        <div class="h-avatar is-big">
+                        <div class="h-avatar is-big">   
                           <img
                             class="avatar"
-                            src="user/<%= data.photo %>"
-                            <!-- data-demo-src="assets/img/avatars/photos/9.jpg" -->
+                            src="/user/<%= data.photo %>"
                             alt=""
-                            data-user-popover="1"
+                            style="width: 50px; height: 60px;"
                           />
                           <img
                             class="badge"
@@ -157,7 +221,7 @@
                           />
                         </div>
                         <h3 class="dark-inverted" data-filter-match>
-                          Anna Baker
+                         <%= data.username %>
                         </h3>
                         <p data-filter-match>UI/UX Designer</p>
                         <div class="people">
@@ -167,12 +231,14 @@
                               data-user-popover="37"
                             >
                               <span>AT</span>
+                         <%= data.pro %>
+
                             </span>
                           </div>
                           <div class="h-avatar is-small">
                             <img
                               class="avatar1"
-                              src="user/<%= data.photo %>"
+                              src="/user/<%= data.photo %>"
                               data-demo-src="assets/img/avatars/photos/23.jpg"
                               alt=""
                               data-user-popover="21"
@@ -200,7 +266,7 @@
 
                   <!-- Form item -->
 
-                  <% for(let i=0;i<data.length;i++){ %>
+                 
                   <div class="col-md-6" style="margin: 10px 0px 10px 0px">
                     <form action="/user-profile" method="post" enctype="multipart/form-data">
                       <div class="input-group mb-3">
@@ -211,7 +277,7 @@
                           type="text"
                           class="form-control"
                           name="username"
-                          value="<%= data[i].username %>"
+                          value="<%= data.username %>"
                           aria-describedby="basic-addon1"
                         />
                       </div>
@@ -224,7 +290,7 @@
                           type="text"
                           class="form-control"
                           name="status"
-                          value="<%= data[i].status %>"
+                          value="<%= data.status %>"
                           aria-describedby="basic-addon2"
                         />
                       </div>
@@ -236,7 +302,7 @@
                           type="text"
                           class="form-control"
                           name="program"
-                          value="<%= data[i].program%>"
+                          value="<%= data.program%>"
                           placeholder="Status"
                           aria-describedby="basic-addon2"
                         />
@@ -250,7 +316,7 @@
                           type="text"
                           class="form-control"
                           name="email"
-                          value="<%= data[i].email %>"
+                          value="<%= data.email %>"
                           aria-describedby="basic-addon3"
                         />
                       </div>
@@ -262,7 +328,7 @@
                           type="text"
                           class="form-control"
                           name="pro"
-                          value="<%= data[i].pro%>"
+                          value="<%= data.pro%>"
                           aria-describedby="basic-addon3"
                         />
                       </div>
@@ -275,7 +341,7 @@
                           type="text"
                           class="form-control"
                           name="mob"
-                          value="<%= data[i].mob %>"
+                          value="<%= data.mob %>"
                           aria-describedby="basic-addon2"
                         />
                       </div>
@@ -286,7 +352,7 @@
                           type="text"
                           class="form-control"
                           name="location"
-                          value="<%= data[i].location %>"
+                          value="<%= data.location %>"
                         />
                       </div>
                       <div class="input-group mb-3">
@@ -319,7 +385,7 @@
                       </button>
                     </form>
                   </div>
-                  <% } %>
+                  
                 </div>
               </div>
 
@@ -341,12 +407,12 @@
     <!-- end app -->
 
     <!-- plugins -->
-    <script src="js/vendors.js"></script>
+    <script src="/js/vendors.js"></script>
 
     <!-- custom app -->
-    <script src="js/app.js"></script>
-    <script src="js/javas.js"></script>
-    <script src="js/toggle.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/javas.js"></script>
+    <script src="/js/toggle.js"></script>
     <script>
       // $(document).ready(function(){
       //   $('input[type="checkbox"]').on('click', function(){

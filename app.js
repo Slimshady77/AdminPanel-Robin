@@ -268,9 +268,11 @@ app.get("/chapter-assignment", (req, res) => {
   res.render("chapter-assignment");
 });
 
-app.get("/user-profile", (req, res) => {
+app.get("/user-profile/:id", (req, res) => {
+  const id=req.params.id;
+  console.log(id)
   userModel1
-    .find({ _id: "64e5b42abd4526dfd776be37" })
+    .findById({ _id: id })
     .then((data) => {
       res.render("user-profile", { data: data }); // Include the data in the render call
     })
