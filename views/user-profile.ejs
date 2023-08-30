@@ -211,7 +211,7 @@
                             class="avatar"
                             src="/user/<%= data.photo %>"
                             alt=""
-                            style="width: 50px; height: 60px;"
+                            style="width: 70px; height: 70px;"
                           />
                           <img
                             class="badge"
@@ -223,7 +223,7 @@
                         <h3 class="dark-inverted" data-filter-match>
                          <%= data.username %>
                         </h3>
-                        <p data-filter-match>UI/UX Designer</p>
+                        <p data-filter-match><%= data.pro %></p>
                         <div class="people">
                           <div class="h-avatar is-small">
                             <span
@@ -231,7 +231,7 @@
                               data-user-popover="37"
                             >
                               <span>AT</span>
-                         <%= data.pro %>
+                         <%= data.location %>
 
                             </span>
                           </div>
@@ -271,7 +271,7 @@
                     <form action="/user-profile" method="post" enctype="multipart/form-data">
                       <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1"
-                          >@</span
+                          >Username</span
                         >
                         <input
                           type="text"

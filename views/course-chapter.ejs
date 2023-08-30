@@ -17,7 +17,76 @@
   <link rel="stylesheet" type="text/css" href="/css/vendors.css" />
   <!-- app style -->
   <link rel="stylesheet" type="text/css" href="/css/style.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+  
+    .card-body {
+      margin: 10px 10px 20px 10px;
+  width: 190px;
+  height: 254px;
+  background: rgb(103, 225, 255);
+  transition: all 0.4s;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 5px  rgba(0, 0, 0, 0.705);
+  font-size: 14px;
+  /* font-weight: 600; */
+}
+
+.card:hover {
+  border-radius: 15px;
+  cursor: pointer;
+  transform: scale(1.2);
+  box-shadow: 0px 0px 10px 5px  rgba(0, 0, 0, 0.705);
+  background: rgb(103, 151, 255);
+}
+
+.first-content {
+  height: 100%;
+  width: 100%;
+  transition: all 0.4s;
+  /* display: flex; */
+  /* justify-content: center; */
+  align-items: center;
+  opacity: 1;
+  border-radius: 15px;
+}
+
+.card:hover .first-content {
+  height: 0px;
+  opacity: 0;
+}
+
+.second-content {
+  height: 0%;
+  width: 100%;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  transition: all 0.4s;
+  font-size: 0px;
+  transform: rotate(90deg) scale(-1);
+}
+
+.card:hover .second-content {
+  opacity: 1;
+  height: 100%;
+  font-size: 1.8rem;
+  transform: rotate(0deg);
+}
+
+    .card .card-body{
+      border-radius: 10px;
+    }
+
+    ul{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  </style>
+
 </head>
 
 <body>
@@ -152,17 +221,24 @@
                           <li>
                             <div class="card" style="width: 18rem;">
                               <div class="card-body">
-                            Chapter Name: <%= data[i].chapter_name %><br>
-                            Course Chapter: <%= data[i].courseChapter %><br>
-                            Photo: <%= data[i].Photo %></br>
-                            Video: <%= data[i].video %></br>
-                            <h5 class="card-title">Chapter</h5>
+                                <div class="first-content">
+                                  Chapter Name: <%= data[i].chapter_name %><br>
+                                  Course Chapter: <%= data[i].courseChapter %><br>
+                                  Photo: <%= data[i].Photo %></br>
+                                  Video: <%= data[i].video %></br>
+                                  <h5 class="card-title">Chapter</h5>
                     <p class="card-text">Your Chapter Here</p>
-                    <a href="/chapter-edit/<%= data[i].cid  %>" class="btn btn-primary">Edit</a>
-                      <a href="/course-chapter-upload/<%= data[i].cid  %>" type="btn-success"
-                          style="background-color: skyblue; border-radius: 10px; margin-top: 10px; padding: 10px; ">+
-                          Add
-                          Chapters</a>
+
+                                </div>
+                            
+                                <div class="second-content">
+                                  <a href="/chapter-edit/<%= data[i].cid  %>" class="btn btn-primary">Edit</a>
+                                  <a href="/course-chapter-upload/<%= data[i].cid  %>" type="btn-success"
+                                      style="background-color: skyblue; border-radius: 10px; margin-top: 10px; padding: 10px; ">+
+                                      Add
+                                      Chapters</a>
+                                </div>
+                    
                   </div>
                 </div>
                

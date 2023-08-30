@@ -1461,7 +1461,7 @@ app.post(
     // Use Promise.all to update each video with its ID in parallel
     Promise.all(
       idsArray.map((videoId) => {
-        return course.findByIdAndUpdate(videoId, updatedCourse);
+        return Course.findByIdAndUpdate(videoId, updatedCourse);
       })
     )
       .then(() => {
