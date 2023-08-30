@@ -1,0 +1,141 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    font-family: "Roboto Mono", monospace;
+}
+body{
+    background-color: skyblue;
+}
+.wrapper{
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    background-color: white;
+    width: 500PX;
+    padding: 3em;
+    border-radius: 1em;
+    perspective: 800px;
+}
+.credit-card{
+    position: relative;
+    width: 350px;
+    height: 220;
+    margin: auto;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease-in-out;
+
+}
+.credit-card.flipped {
+    transform: rotateY(180deg);
+  }
+.card-front, .card-back{
+position: relative;
+width: inherit;
+height: inherit;
+background: linear-gradient(#33a4f8, #206df9);
+border-radius: 1em;
+backface-visibility: hidden;
+}
+.card-front{
+    padding: 2em 1em;
+    height: 200px;
+}
+.branding{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.branding img{
+    width: 50px;
+    height: auto;
+}
+.card-back{
+    position: absolute;
+    height: 200px;
+    transform: rotateY(360deg);
+}
+
+.card-number{
+    color: #FFFFFF;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8em;
+    margin-top: 3em;
+}
+
+.details{
+    color: #FFFFFF;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5em;
+    font-size: 0.8em;
+}
+.details span{
+    display: block;
+}
+.details #card-holder-name{
+    text-transform: uppercase;
+}
+.card-back .black-strip{
+    position: relative;
+    background-color: black;
+    height: 50px;
+    top: 2em;
+}
+.card-back .white-strip{
+    top: 3em;
+    position: relative;
+    text-align: right;
+}
+.card-back .white-strip span{
+    margin-right: 1em;
+}
+.card-back .white-strip div{
+    height: 30px;
+    background-color: #FFFFFF;
+    margin-top: 0.5em;
+}
+
+.card-back .visa-logo{
+    position: absolute;
+    width: 50px;
+    margin-top: 4em;
+    right: 1em;
+}
+form{
+    margin-top: 2em;
+}
+label, input{
+    display: block;
+}
+label{
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+input{
+    width: 100%;
+}
+label{
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+input{
+    width: 100%;
+    border: 1px solid  black;
+    padding: 1em 0.5em;
+    border-radius: 0.5em;
+}
+input:not(:last-child){
+    margin-bottom: 1em;
+}
+form .date-cvv{
+    display: flex;
+    justify-content: space-between;
+}
+
+.credit-card.flipped .card-back {
+    transform: rotateY(180deg);
+  }
