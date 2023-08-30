@@ -33,6 +33,7 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  ch_id:String
 });
 
 const question = mongoose.model("question", userSchema);

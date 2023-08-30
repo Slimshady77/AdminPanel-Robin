@@ -264,8 +264,12 @@ app.get("/support", (req, res) => {
 app.get("/calculator", (req, res) => {
   res.render("calculator");
 });
-app.get("/chapter-assignment", (req, res) => {
-  res.render("chapter-assignment");
+app.get("/chapter-assignment/:id", (req, res) => {
+  const id=req.params.id;
+  chapter.findById(id)
+  .then((data)=>
+  res.render("chapter-assignment",{data:data}))
+  .catch((err)=>console.log(err));
 });
 
 app.get("/user-profile/:id", (req, res) => {
@@ -396,7 +400,9 @@ app.get("/course-chapter-upload/:cid", (req, res) => {
   });
 });
 
-app.post("/submit-quiz", async (req, res) => {
+app.post("/submit-quiz/:id", async (req, res) => {
+  const ch_id=req.params.id;
+
   try {
     const quizAnswer = {
       question: req.body.question,
@@ -405,10 +411,11 @@ app.post("/submit-quiz", async (req, res) => {
       option3: req.body.option3,
       option4: req.body.option4,
       correctAnswer: req.body.correctAnswer,
+      ch_id:ch_id
     };
     const quiz = await questionModel(quizAnswer);
     quiz.save();
-    res.status(201).json({
+    blurt({
       success: true,
       quiz,
     });
