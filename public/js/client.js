@@ -21,8 +21,9 @@ form.addEventListener('submit', (e) => {
    messageInput ="";
 })
 
-const name = prompt("Enter your name to join");
-socket.emit('new-user-joined', name);
+// const name = prompt("Enter your name to join");
+ const userName = document.getElementById('fname').value; 
+socket.emit('new-user-joined', userName);
 
 socket.on('user-joined', name => {
    append(`${name} joined the chat`, 'right')

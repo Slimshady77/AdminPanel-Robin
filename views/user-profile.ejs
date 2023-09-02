@@ -268,7 +268,7 @@
 
                  
                   <div class="col-md-6" style="margin: 10px 0px 10px 0px">
-                    <form action="/user-profile" method="post" enctype="multipart/form-data">
+                    <form id="registrationForm" action="/user-profile" method="post" enctype="multipart/form-data">
                       <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1"
                           >Username</span
@@ -414,23 +414,38 @@
     <script src="/js/javas.js"></script>
     <script src="/js/toggle.js"></script>
     <script>
-      // $(document).ready(function(){
-      //   $('input[type="checkbox"]').on('click', function(){
-      //     var parentRow= $(this).closest('tr');
-
-      //     if($(this).is(':checked')){
-      //       parentRow.siblings().hide();
-      //     }else{
-      //       parentRow.siblings().show();
-      //     }
-      //   }); 
-      // });
-
-      $(document).ready(function () {
+          $(document).ready(function () {
         $(".clickable-row").on("click", function () {
           window.location = $(this).data("href");
         });
       });
     </script>
+     <script>
+      // Function to handle the form submission
+      document.getElementById("registrationForm").addEventListener("submit", async function(event) {
+          event.preventDefault();
+  
+          // Send the form data to the server using fetch or any other method
+          try {
+              const formData = new FormData(this);
+              const response = await fetch("/user-profile", {
+                  method: "POST",
+                  body: formData,
+              });
+  
+              if (response.ok) {
+                  // Registration was successful, display the popup message
+                  alert("Registration successful");
+                  // You can also redirect the user to another page or perform any other action here.
+              } else {
+                  // Handle errors if registration failed
+                  console.error("Registration failed:", response.statusText);
+              }
+          } catch (err) {
+              console.error("An error occurred:", err);
+          }
+      });
+  </script>
+  
   </body>
 </html>

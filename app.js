@@ -226,7 +226,7 @@ app.get("/chart-sparkline", (req, res) => {
 });
 app.get("/app-chat", (req, res) => {
   userModel
-    .findOne(req.body.id)
+    .findOne(req.user)
     .then((data) => res.render("app-chat", { data: data }))
     .catch((err) => console.log(err));
 });
@@ -414,11 +414,10 @@ app.post("/submit-quiz/:id", async (req, res) => {
       ch_id:ch_id
     };
     const quiz = await questionModel(quizAnswer);
-    quiz.save();
-    blurt({
-      success: true,
-      quiz,
-    });
+    quiz.save()
+   .then(()=>res.status(200).json({message:'succesfully uploaded the questions'}),
+   res.redirect('/course-page'))
+   .catch((err)=>console.log(err));
   } catch (err) {
     console.log("internal err");
     res.status(500).json({
@@ -548,7 +547,8 @@ app.post("/user-profile", upload4.single("photo"), async (req, res) => {
 
     if (user) {
       console.log("User already exists!");
-      return res.status(400).send("User already exists!");
+      // return res.status(400).send("User already exists!");
+      res.render('user-profile.ejs');
     }
 
     const register1 = new userModel1({
@@ -1022,7 +1022,8 @@ app.post(
       .save()
       .then(() => {
         console.log("Successfully added the program..");
-        res.status(200).json({ message: "program Added" });
+        // res.status(200).json({ message: "program Added" }),
+        res.redirect('/course-page')
       })
       .catch((err) => {
         console.log(err);
@@ -1084,7 +1085,8 @@ app.post(
     chpater_upload
       .save()
       .then(() =>
-        res.status(200).json({ message: "successfully uploaded the chapter" })
+        res.status(200).json({ message: "successfully uploaded the chapter" }),
+        res.redirect('/course-page')
       )
       .catch((err) => console.log(err));
   }

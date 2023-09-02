@@ -123,7 +123,7 @@
                 <div class="row">
                   
                   <div class="col-md-6">
-                    <form action="/submit-quiz/<%= data._id %>" method="post">
+                    <form action="/submit-quiz/<%= data._id %>" method="post" onsubmit="alert('success');">
                       <div class="form-group">
                         <label for="question">Question:</label>
                         <input id="question" name="question" class="form-control" placeholder="Enter your question" required>

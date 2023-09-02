@@ -24,7 +24,7 @@
       margin: 10px 10px 20px 10px;
   width: 190px;
   height: 254px;
-  background: rgb(103, 225, 255);
+  background: #019191;
   transition: all 0.4s;
   border-radius: 10px;
   box-shadow: 0px 0px 10px 5px  rgba(0, 0, 0, 0.705);
@@ -205,10 +205,10 @@
                         <li aria-current="page" class="breadcrumb-item active text-primary">
                           Main Program
                         </li>
-                        <a href="course-chapter-upload/<%= data._id %>" type="btn-success"
+                        <!-- <a href="/course-chapter-upload/<%= data.cid %>" type="btn-success"
                           style="background-color: white; border-radius: 10px; margin-top: 50px; padding: 20px; position: sticky;">+
                           Add
-                          Chapters</a>
+                          Chapters</a> -->
                       </ol>
                     </nav>
                   </div>
@@ -233,6 +233,8 @@
                             
                                 <div class="second-content">
                                   <a href="/chapter-edit/<%= data[i].cid  %>" class="btn btn-primary">Edit</a>
+                                  <a href="/course-chapter-upload/<%= data[i].cid  %>" class="btn btn-primary">Add Chapter</a>
+
                                   <a href="/chapter-assignment/<%= data[i]._id %>" type="btn-success"
                                       style="background-color: skyblue; border-radius: 10px; margin-top: 10px; padding: 10px; ">+
                                       Add
@@ -290,6 +292,8 @@
     <script>
         new DataTable('#chapter');
     </script>
+
+    
   </body>
 
 
