@@ -17,7 +17,7 @@ const passport = require("passport");
 const BodyParser = require("body-parser");
 const expressSession = require("express-session");
 // const fileStore = require("session-file-store")(expressSession);
-// const cookieParser = require('cookie-parser');
+// const cookie = require('cookie-parser');
 app.use(BodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static(__dirname + "/public"));
@@ -38,14 +38,15 @@ const questionModel = require("./model/question");
 const categoryModel = require("./model/category");
 const PORT = process.env.PORT;
 const secret = process.env.SECRET;
-
+// app.use(cookie())
 app.use(
   expressSession({
     secret: secret,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 60000 },
-    // store: new fileStore()
+    cookie: { secure: false, maxAge: 6000000 },
+    // store: new fileStore(),
+    
   })
 );
 require("./passport-jwt")(passport);
@@ -96,10 +97,10 @@ const io = require("socket.io")(http, {
 // );
 
 function isAuthenticated(req, res, next) {
-  console.log("isAuthenticated middleware executed");
-  console.log("req.user:", req.userID);
+  console.log("isAuthenticated middleware executed",req.user);
+  console.log("req.user:", req.user);
 
-  if (req.isAuthenticated()) {
+  if (req.isAuthenticated() && req.user) {
     return next();
   }
 
@@ -741,10 +742,9 @@ function generateJwtToken(userID) {
   return token;
 }
 
-app.get("/verify", async (req, res) => {
+app.get("/verify", async(req, res) => {
   const token = req.query.token;
   console.log("Received token:", token);
-  console.log("Req User:", req.user);
   try {
     const decodedToken = jwt.verify(token, process.env.secret);
     console.log("Decoded token:", decodedToken);
@@ -752,6 +752,8 @@ app.get("/verify", async (req, res) => {
     if (decodedToken && decodedToken.userID) {
       const user = await userModel.findById(decodedToken.userID).exec();
       console.log("Found user:", user);
+      req.user=user;
+      console.log("Req User:", req.user);
 
       if (user) {
         // res.redirect('/login')

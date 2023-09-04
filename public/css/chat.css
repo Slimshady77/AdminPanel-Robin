@@ -37,9 +37,9 @@
 
 #messageInp{
     width: 92%;
-    border: 2px solid blue;
+    border: 2px solid rgb(1, 26, 1);
     border-radius: 10px;
-    height: 34px;
+    height: 100px;
 }
 
 .btn{
