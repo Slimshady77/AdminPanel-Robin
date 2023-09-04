@@ -158,7 +158,7 @@
                               <div class="card-body">
                                 <div class="first-content">
                                   Chapter Name: <%= data[i].chapter_name %><br>
-                                  Course Chapter: <%= data[i].courseChapter %><br>
+                                  Course Chapter: <%= data[i].program %><br>
                                   Photo: <%= data[i].Photo %></br>
                                   Video: <%= data[i].video %></br>
                                   <h5 class="card-title">Chapter</h5>
@@ -167,7 +167,7 @@
                                 </div>
                             
                                 <div class="second-content">
-                                  <a href="/chapter-edit/<%= data[i].cid  %>" class="btn btn-primary">Edit</a>
+                                  <a href="/chapter-edit/<%= data[i]._id  %>" class="btn btn-primary">Edit</a>
                                   <a href="/course-chapter-upload/<%= data[i].cid  %>" class="btn btn-primary">Add Chapter</a>
 
                                   <a href="/chapter-assignment/<%= data[i]._id %>" type="btn-success"

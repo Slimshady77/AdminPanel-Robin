@@ -128,7 +128,7 @@
 
               <form
                 method="post"
-                action="/update-selected-videos/<%= data._id %>"
+                action="/update-selected-videos/<%= libraryData._id %>"
                 enctype="multipart/form-data"
               >
                 <div class="col-md-12 m-b-30">
@@ -149,22 +149,18 @@
                         </thead>
                         <tbody>
                           <tr>
-                            <td><input type="text" value="<%= data.file_name %>"></td>
+                            <td><input type="text" value="<%= libraryData.file_name %>" name="file_name"></td>
  <td> <label for="category">Category</label>
-                                                    <select id="inputState3" class="form-control w-60" name="category">
-                                                      <option>video1</option>
-                                                      <option>video2</option>
-                                                      <option<%= data.category === 'video1' ? ' selected' : '' %>>video1</option>
-                                                      <option<%= data.category === 'video2' ? ' selected' : '' %>>video2</option>
-                                                      <option<%= data.category === 'video3' ? ' selected' : '' %>>video3</option>
-                                                      <option<%= data.category === 'video4' ? ' selected' : '' %>>video4</option>
-                                                      <option<%= data.category === 'video5' ? ' selected' : '' %>>video5</option>
-                                                    </select>
+  <select id="category" class="form-control" name="category">
+    <option selected>Select Category</option>
+    <% for (let i = 0; i < categoryData.length; i++) { %>
+      <option><%= categoryData[i].category_id %>&nbsp;<%= categoryData[i].category %></option>
+    <% } %>
+  </select>
                                                   </td>
-                            <!-- <td><input type="text" value="<%= data.category %>"></td> -->
                             <td>
                               <img
-                                src="/photos/<%= data.Photo %>"
+                                src="/photos/<%= libraryData.Photo %>"
                                 alt=""
                                 style="width: 100px; height: 100px"
                               />
@@ -176,7 +172,7 @@
                                 style="width: 100px; height: 100px"
                               >
                                 <source
-                                  src="/videos/<%= data.video %>"
+                                  src="/videos/<%= libraryData.video %>"
                                   type="video/mp4"
                                 />
                                 Your browser does not support the video tag.
@@ -185,9 +181,6 @@
 
                             </td>
                             <td>
-                              <a href="/delete/<%= data._id %>"
-                                ><i class="nav-icon ti ti-trash"></i
-                              ></a>
                               <button type="submit" class="btn btn-primary">
                                 Update
                               </button>

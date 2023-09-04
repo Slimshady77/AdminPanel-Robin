@@ -46,7 +46,6 @@ app.use(
     saveUninitialized: false,
     cookie: { secure: false, maxAge: 6000000 },
     // store: new fileStore(),
-    
   })
 );
 require("./passport-jwt")(passport);
@@ -97,7 +96,7 @@ const io = require("socket.io")(http, {
 // );
 
 function isAuthenticated(req, res, next) {
-  console.log("isAuthenticated middleware executed",req.user);
+  console.log("isAuthenticated middleware executed", req.user);
   console.log("req.user:", req.user);
 
   if (req.isAuthenticated() && req.user) {
@@ -266,16 +265,16 @@ app.get("/calculator", (req, res) => {
   res.render("calculator");
 });
 app.get("/chapter-assignment/:id", (req, res) => {
-  const id=req.params.id;
-  chapter.findById(id)
-  .then((data)=>
-  res.render("chapter-assignment",{data:data}))
-  .catch((err)=>console.log(err));
+  const id = req.params.id;
+  chapter
+    .findById(id)
+    .then((data) => res.render("chapter-assignment", { data: data }))
+    .catch((err) => console.log(err));
 });
 
 app.get("/user-profile/:id", (req, res) => {
-  const id=req.params.id;
-  console.log(id)
+  const id = req.params.id;
+  console.log(id);
   userModel1
     .findById({ _id: id })
     .then((data) => {
@@ -402,7 +401,7 @@ app.get("/course-chapter-upload/:cid", (req, res) => {
 });
 
 app.post("/submit-quiz/:id", async (req, res) => {
-  const ch_id=req.params.id;
+  const ch_id = req.params.id;
 
   try {
     const quizAnswer = {
@@ -412,13 +411,19 @@ app.post("/submit-quiz/:id", async (req, res) => {
       option3: req.body.option3,
       option4: req.body.option4,
       correctAnswer: req.body.correctAnswer,
-      ch_id:ch_id
+      ch_id: ch_id,
     };
     const quiz = await questionModel(quizAnswer);
-    quiz.save()
-   .then(()=>res.status(200).json({message:'succesfully uploaded the questions'}),
-   res.redirect('/course-page'))
-   .catch((err)=>console.log(err));
+    quiz
+      .save()
+      .then(
+        () =>
+          res
+            .status(200)
+            .json({ message: "succesfully uploaded the questions" }),
+        res.redirect("/course-page")
+      )
+      .catch((err) => console.log(err));
   } catch (err) {
     console.log("internal err");
     res.status(500).json({
@@ -549,7 +554,7 @@ app.post("/user-profile", upload4.single("photo"), async (req, res) => {
     if (user) {
       console.log("User already exists!");
       // return res.status(400).send("User already exists!");
-      res.render('user-profile.ejs');
+      res.render("user-profile.ejs");
     }
 
     const register1 = new userModel1({
@@ -742,7 +747,7 @@ function generateJwtToken(userID) {
   return token;
 }
 
-app.get("/verify", async(req, res) => {
+app.get("/verify", async (req, res) => {
   const token = req.query.token;
   console.log("Received token:", token);
   try {
@@ -752,7 +757,7 @@ app.get("/verify", async(req, res) => {
     if (decodedToken && decodedToken.userID) {
       const user = await userModel.findById(decodedToken.userID).exec();
       console.log("Found user:", user);
-      req.user=user;
+      req.user = user;
       console.log("Req User:", req.user);
 
       if (user) {
@@ -1025,7 +1030,7 @@ app.post(
       .then(() => {
         console.log("Successfully added the program..");
         // res.status(200).json({ message: "program Added" }),
-        res.redirect('/course-page')
+        res.redirect("/course-page");
       })
       .catch((err) => {
         console.log(err);
@@ -1086,9 +1091,12 @@ app.post(
     });
     chpater_upload
       .save()
-      .then(() =>
-        res.status(200).json({ message: "successfully uploaded the chapter" }),
-        res.redirect('/course-page')
+      .then(
+        () =>
+          res
+            .status(200)
+            .json({ message: "successfully uploaded the chapter" }),
+        res.redirect("/course-page")
       )
       .catch((err) => console.log(err));
   }
@@ -1296,8 +1304,8 @@ app.get("/delete/V2/:id", isAuthenticated, (req, res) => {
 
 app.get("/course-edit/:id", (req, res) => {
   // console.log(req.user._id);
-const id = req.params.id;
-  Course.find({_id:id})
+  const id = req.params.id;
+  Course.find({ _id: id })
     .then((data) => {
       res.render("course-edit", { data: data });
       // console.log(data);
@@ -1309,11 +1317,11 @@ const id = req.params.id;
 
 app.get("/chapter-edit/:id", (req, res) => {
   // console.log(req.user._id);
-const id=req.params.id;
-console.log(`course id is ${id}`);
+  const id = req.params.id;
+  console.log(`course id is ${id}`);
 
   chapter
-    .find({cid:id})
+    .find({ _id: id })
     .then((data) => {
       res.render("chapter-edit", { data: data });
       // console.log(data);
@@ -1323,29 +1331,49 @@ console.log(`course id is ${id}`);
     });
 });
 
-// app.get("/library-edit", (req, res) => {
-//   library
+
+app.get("/library-edit/:id", async (req, res) => {
+  try {
+    const categoryData = await categoryModel.find().exec();
+    const libraryData = await library.findById(req.params.id).exec();
+
+    if (!categoryData || !libraryData) {
+      return res.status(404).send("Data not found");
+    }
+
+    res.render("library-edit", { categoryData: categoryData, libraryData: libraryData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred");
+  }
+});
+
+
+// app.get("/library-edit/:id", (req, res) => {
+//   categoryModel
 //     .find()
 //     .then((data) => {
 //       res.render("library-edit", { data: data });
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.status(500).send("An error occurred");
+//     });
+// }); 
+
+
+
+// app.get("/library-edit/:id", (req, res) => {
+//   library
+//     .findById({ _id: req.params.id })
+//     .then((data) => {
 //       console.log(data);
+//       res.render("library-edit", { data: data });
 //     })
 //     .catch((error) => {
 //       console.log(error);
 //     });
 // });
-
-app.get('/library-edit/:id', (req, res) => {
-
-    library.findById({_id:req.params.id})
-        .then((data) => {
-            console.log(data);
-            res.render('library-edit', { data: data });
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-})
 
 // EDIT STARTS
 app.post("/edit/:id", (req, res) => {
@@ -1363,8 +1391,7 @@ app.post("/edit/:id", (req, res) => {
   //         contentType: 'image/jpg',
   //     };
   // }
-  Course
-    .findByIdAndUpdate(req.params.id, updatedit)
+  Course.findByIdAndUpdate(req.params.id, updatedit)
     .then(() => {
       // res.redirect('course-page');
       res.send("successfully updated!");
@@ -1408,7 +1435,7 @@ app.post(
     { name: "Photo", maxCount: 2 },
   ]),
   (req, res) => {
-    const id=req.params.id;
+    const id = req.params.id;
     // const selectedVideoIds = req.body.selectedItems;
     // console.log(selectedVideoIds);
 
@@ -1425,9 +1452,7 @@ app.post(
     };
 
     // Convert selectedVideoIds to an array if it's not already one
-    const videoIdsArray = Array.isArray(id)
-      ? selectedVideoIds
-      : [id];
+    const videoIdsArray = Array.isArray(id) ? selectedVideoIds : [id];
 
     // Use Promise.all to update each video with its ID in parallel
     Promise.all(
@@ -1495,12 +1520,16 @@ app.post(
   ]),
   (req, res) => {
     const selectedChapterIds = req.body.selectedItems;
-    console.log(selectedChapterIds);
+    // console.log(selectedChapterIds);
 
     // Extract chapter_name and program and take the first element if they are arrays
     const updatedChapter = {
-      chapter_name: req.body.chapter_name[0],
-      program: req.body.program[0],
+      chapter_name: Array.isArray(req.body.chapter_name)
+        ? req.body.chapter_name[0]
+        : req.body.chapter_name,
+      program: Array.isArray(req.body.program)
+        ? req.body.program[0]
+        : req.body.program,
       video: req.files["video"][0].filename,
       Photo: req.files["Photo"][0].filename,
     };

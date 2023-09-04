@@ -10,8 +10,10 @@ mongoose.connect(url, {
     .catch((err) => console.log(err));
 
 const courseSchema = mongoose.Schema({
-    chapter_name: String,
-    program: String,
+    chapter_name:{
+        type:[String]
+    } ,
+    program: [String],
     Photo: [String],
     video:[String],
     cid:String,
