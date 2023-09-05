@@ -5,7 +5,7 @@ const bcrypyt = require("bcrypt");
 
 exports.initializingPassport = (passport) => {
   passport.use(
-    new LocalStrategy(async (username, password, done) => {
+    new LocalStrategy( {usernameField:'email',passwordField:'passwd'}, async (username, password, done) => {
       try {
         const user = await userModel.findOne({ username });
 
